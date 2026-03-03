@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UIElements.Experimental;
 
 public class CameraController : MonoBehaviour
 {
@@ -10,7 +12,9 @@ public class CameraController : MonoBehaviour
     [SerializeField] float moveSpeed;
     [SerializeField] float tolerance;
 
-    [SerializeField] Monitor monitor;
+    public UnityEvent onZoomed;
+
+    public bool GameStartButtonClicked {get; set;}
 
     void Awake()
     {
@@ -20,12 +24,12 @@ public class CameraController : MonoBehaviour
     {
         MoveToEndingPosition();
     }
-
     private void MoveToEndingPosition()
     {
+        if (!GameStartButtonClicked) return;
         if (Vector3.Distance(mainCamera.transform.position, endingPosition) < tolerance)
         {
-            monitor.ActiveRayCaster();
+            onZoomed.Invoke();
             this.enabled = false;
         }
         mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, endingPosition, moveSpeed * Time.deltaTime);
