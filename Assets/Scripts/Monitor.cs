@@ -6,19 +6,24 @@ using UnityEngine.UI;
 
 public class Monitor : MonoBehaviour
 {
-    private Screen screen;
-    private Canvas canvas;
-    private Button powerButton;
-    void Awake()
-    {
-        screen = GetComponentInChildren<Screen>();
-        canvas = GetComponentInChildren<Canvas>();
-        powerButton = canvas.GetComponentInChildren<Button>();
-    }
+    [SerializeField] private Canvas canvas;
+    [SerializeField] private Button powerButton;
+
+    [SerializeField] GameObject screen;
 
     void Start()
     {
-        screen.Hide();
-        powerButton.onClick.AddListener(screen.Toggle);
+        OffScreen();
+        powerButton.onClick.AddListener(ToggleScreen);
+    }
+
+    private void OffScreen()
+    {
+        screen.SetActive(false);
+    }
+
+    private void ToggleScreen()
+    {
+        screen.SetActive(!screen.activeSelf);
     }
 }
