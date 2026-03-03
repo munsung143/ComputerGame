@@ -6,14 +6,20 @@ using UnityEngine.UI;
 
 public class Monitor : MonoBehaviour
 {
-    [SerializeField] private Canvas canvas;
+    [SerializeField] private GraphicRaycaster raycaster;
     [SerializeField] private Button powerButton;
 
     [SerializeField] Screen screen;
 
     void Awake()
     {
+        raycaster.enabled = false;
         screen.Off();
         powerButton.onClick.AddListener(screen.Toggle);
+    }
+
+    public void ActiveRayCaster()
+    {
+        raycaster.enabled = true;
     }
 }

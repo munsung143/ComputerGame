@@ -7,8 +7,10 @@ public class CameraController : MonoBehaviour
 
     private Camera mainCamera;
     [SerializeField] private Vector3 endingPosition;
-    [SerializeField] float moveSpeed = 0.01f;
-    [SerializeField] float tolerance = 0.1f;
+    [SerializeField] float moveSpeed;
+    [SerializeField] float tolerance;
+
+    [SerializeField] Monitor monitor;
 
     void Awake()
     {
@@ -23,9 +25,10 @@ public class CameraController : MonoBehaviour
     {
         if (Vector3.Distance(mainCamera.transform.position, endingPosition) < tolerance)
         {
-            return;
+            monitor.ActiveRayCaster();
+            this.enabled = false;
         }
-        mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, endingPosition, moveSpeed);
+        mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, endingPosition, moveSpeed * Time.deltaTime);
     }
 
 }
