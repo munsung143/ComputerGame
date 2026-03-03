@@ -9,21 +9,11 @@ public class Monitor : MonoBehaviour
     [SerializeField] private Canvas canvas;
     [SerializeField] private Button powerButton;
 
-    [SerializeField] GameObject screen;
+    [SerializeField] Screen screen;
 
-    void Start()
+    void Awake()
     {
-        OffScreen();
-        powerButton.onClick.AddListener(ToggleScreen);
-    }
-
-    private void OffScreen()
-    {
-        screen.SetActive(false);
-    }
-
-    private void ToggleScreen()
-    {
-        screen.SetActive(!screen.activeSelf);
+        screen.Off();
+        powerButton.onClick.AddListener(screen.Toggle);
     }
 }
