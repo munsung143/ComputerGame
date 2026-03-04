@@ -29,6 +29,7 @@ public class CameraController : MonoBehaviour
         if (!GameStartButtonClicked) return;
         if (Vector3.Distance(mainCamera.transform.position, endingPosition) < tolerance)
         {
+            mainCamera.transform.position = endingPosition;
             onZoomed.Invoke();
             this.enabled = false;
         }

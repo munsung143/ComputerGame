@@ -50,6 +50,8 @@ public class Screen : MonoBehaviour
         yesSeq.ClearText();
         sepSeq.ClearText();
         noSeq.ClearText();
+        yesSeq.DisableButton();
+        noSeq.DisableButton();
         if (currentSentenceRoutine != null) StopCoroutine(currentSentenceRoutine);
         if (currentQuestionIndex >= questionList.list.Count) return;
         Question question = questionList.list[currentQuestionIndex];
