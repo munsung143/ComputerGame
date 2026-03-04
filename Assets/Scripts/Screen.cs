@@ -5,36 +5,88 @@ using TMPro;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class Screen : MonoBehaviour
 {
-    [SerializeField] TMP_Text screenText;
+    [SerializeField] TextSequence sentenceSeq;
+    [SerializeField] TextSequence yesSeq;
+    [SerializeField] TextSequence sepSeq;
+    [SerializeField] TextSequence noSeq;
     [SerializeField] GameObject screenOffPanel;
-
+    [SerializeField] Button nextButton;
     [SerializeField] float textDelay;
+    [SerializeField] float underbarDelay;
+    [SerializeField] QuestionListSO questionList;
     public UnityEvent onScreenOn;
-
-    [SerializeField] string testText;
-
     private bool isOn;
-
-    private WaitForSeconds delay;
-
-    private int compositeKoreanStartAt = 0xAC00;
-
-    private int[] koreanFirstTable = { 1, 2, 4, 7, 8,9,17,18,19,21,22,23,24,25,26,27,28,29,30 }; 
+    private WaitForSeconds textDelayWfs;
+    private WaitForSeconds underbarDelayWfs;
+    private int currentQuestionIndex;
+    private int currentSentenceIndex;
+    private Coroutine currentSentenceRoutine;
 
     void Awake()
     {
-        onScreenOn.AddListener(StartTextRoutine);
-        onScreenOn.AddListener(onScreenOn.RemoveAllListeners);
+        onScreenOn.AddListener(ReadQuestion);
+        onScreenOn.AddListener(() => onScreenOn.RemoveListener(ReadQuestion));
+        nextButton.onClick.AddListener(ReadQuestion);
+        textDelayWfs = new WaitForSeconds(textDelay);
+        underbarDelayWfs = new WaitForSeconds(underbarDelay);
 
-        delay = new WaitForSeconds(textDelay);
+        noSeq.onTextEnd.AddListener(() =>
+        {
+            yesSeq.EnableButton();
+            noSeq.EnableButton();
+        });
+        yesSeq.AddButtonListener(ReadQuestion);
+        noSeq.AddButtonListener(ReadQuestion);
     }
-
-    void StartTextRoutine()
+    public void ReadQuestion()
     {
-        StartCoroutine(TextCoroutine(testText));
+        DisableNext();
+        yesSeq.ClearText();
+        sepSeq.ClearText();
+        noSeq.ClearText();
+        if (currentSentenceRoutine != null) StopCoroutine(currentSentenceRoutine);
+        if (currentQuestionIndex >= questionList.list.Count) return;
+        Question question = questionList.list[currentQuestionIndex];
+        string sentence = question.sentences[currentSentenceIndex];
+        bool last = currentSentenceIndex == question.sentences.Length - 1;
+        currentSentenceRoutine = StartCoroutine(sentenceSeq.TextRoutine(sentence, textDelayWfs, underbarDelayWfs));
+        if (last)
+        {
+            sentenceSeq.onTextEnd.AddListener(ReadAsking);
+            sentenceSeq.onTextEnd.AddListener(() => sentenceSeq.onTextEnd.RemoveListener(ReadAsking));
+            currentSentenceIndex = 0;
+        }
+        else
+        {
+            sentenceSeq.onTextEnd.AddListener(EnableNext);
+            sentenceSeq.onTextEnd.AddListener(() => sentenceSeq.onTextEnd.RemoveListener(EnableNext));
+            currentSentenceIndex++;
+        }
+    }
+    public void ReadAsking()
+    {
+        Question question = questionList.list[currentQuestionIndex];
+        string yes = question.yesString;
+        if (yes == null || yes == "") yes = "YES";
+        string no = question.noString;
+        if (no == null || no == "") no = "NO";
+
+        StartCoroutine(yesSeq.TextRoutine(yes, textDelayWfs, underbarDelayWfs, false));
+        yesSeq.onTextEnd.AddListener(() =>
+        {
+            StartCoroutine(sepSeq.TextRoutine("/", textDelayWfs, underbarDelayWfs, false));
+            yesSeq.onTextEnd.RemoveAllListeners();
+        });
+        sepSeq.onTextEnd.AddListener(() =>
+        {
+            StartCoroutine(noSeq.TextRoutine(no, textDelayWfs, underbarDelayWfs, false));
+            sepSeq.onTextEnd.RemoveAllListeners();
+        });
+        currentQuestionIndex++;
     }
 
     public void Toggle()
@@ -46,7 +98,7 @@ public class Screen : MonoBehaviour
     {
         screenOffPanel.SetActive(false);
         isOn = true;
-        onScreenOn.Invoke();
+        onScreenOn?.Invoke();
     }
     public void Off()
     {
@@ -54,53 +106,13 @@ public class Screen : MonoBehaviour
         isOn = false;
     }
 
-    IEnumerator TextCoroutine(string input)
+    public void EnableNext()
     {
-        // char는 해당 문자의 유니코드 값만을 저장한다.
-        // UTF-8 인코딩 방식으로 저장하지 않는다.
-        // 한글 문자 형성 공식 {(초성×28x21)+(중성×28)+종성}+44032 
-        // (종성 0~27, 중성 0~20)
-        string resultText = "";
-        foreach (char c in input)
-        {
-            if (c >= compositeKoreanStartAt)
-            {
-                int composite = c - compositeKoreanStartAt;
-                int last = composite % 28;
-                composite /= 28;
-                int middle = composite % 21 * 28; 
-                composite /= 21;
-                int first = composite;
-
-                char letter = (char)(koreanFirstTable[first] + 0x3130);
-                resultText = $"{resultText}{letter}";
-                screenText.text = resultText;
-                yield return delay;
-
-                resultText = resultText.Remove(resultText.Length - 1);
-                first = first * 21 * 28;
-                letter = (char)(first + middle + compositeKoreanStartAt);
-                resultText = $"{resultText}{letter}";
-                screenText.text = resultText;
-                yield return delay;
-
-                if (last != 0)
-                {
-                    resultText = resultText.Remove(resultText.Length - 1);
-                    letter = (char)(first + middle + last + compositeKoreanStartAt);
-                    resultText = $"{resultText}{letter}";
-                    screenText.text = resultText;
-                    yield return delay;
-                }
-
-            }
-            else
-            {
-                resultText = $"{resultText}{c}";
-                screenText.text = resultText;
-                yield return delay;
-            }
-        }
+        nextButton.enabled = true;
+    }
+    public void DisableNext()
+    {
+        nextButton.enabled = false;
     }
 
 
