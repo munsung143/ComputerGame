@@ -13,6 +13,8 @@ public class Screen : MonoBehaviour
     [SerializeField] TextSequence yesSeq;
     [SerializeField] TextSequence sepSeq;
     [SerializeField] TextSequence noSeq;
+
+    [SerializeField] TMP_Text widthTester;
     [SerializeField] GameObject screenOffPanel;
     [SerializeField] Button nextButton;
     [SerializeField] float textDelay;
@@ -56,6 +58,7 @@ public class Screen : MonoBehaviour
         currentSentenceRoutine = StartCoroutine(sentenceSeq.TextRoutine(sentence, textDelayWfs, underbarDelayWfs));
         if (last)
         {
+            widthTester.text = question.yesString == "" ? "YES" : question.yesString;
             sentenceSeq.onTextEnd.AddListener(ReadAsking);
             sentenceSeq.onTextEnd.AddListener(() => sentenceSeq.onTextEnd.RemoveListener(ReadAsking));
             currentSentenceIndex = 0;
@@ -70,20 +73,20 @@ public class Screen : MonoBehaviour
     public void ReadAsking()
     {
         Question question = questionList.list[currentQuestionIndex];
-        string yes = question.yesString;
-        if (yes == null || yes == "") yes = "YES";
-        string no = question.noString;
-        if (no == null || no == "") no = "NO";
+        string yes = question.yesString == "" ? "YES" : question.yesString;
+        string no = question.noString == "" ? "NO" : question.noString;
 
-        StartCoroutine(yesSeq.TextRoutine(yes, textDelayWfs, underbarDelayWfs, false));
+        float width = widthTester.rectTransform.rect.width;
+        yesSeq.SetCorrectPosition(width);
+        StartCoroutine(yesSeq.TextRoutine(yes, null, null, false));
         yesSeq.onTextEnd.AddListener(() =>
         {
-            StartCoroutine(sepSeq.TextRoutine("/", textDelayWfs, underbarDelayWfs, false));
+            StartCoroutine(sepSeq.TextRoutine("/", null, null, false));
             yesSeq.onTextEnd.RemoveAllListeners();
         });
         sepSeq.onTextEnd.AddListener(() =>
         {
-            StartCoroutine(noSeq.TextRoutine(no, textDelayWfs, underbarDelayWfs, false));
+            StartCoroutine(noSeq.TextRoutine(no, null, null, false));
             sepSeq.onTextEnd.RemoveAllListeners();
         });
         currentQuestionIndex++;

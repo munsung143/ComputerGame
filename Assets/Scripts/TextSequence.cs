@@ -12,13 +12,26 @@ public class TextSequence : MonoBehaviour
     private static int[] FIRST_KOREAN_LETTER_TABLE = { 1, 2, 4, 7, 8, 9, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
     [SerializeField] TMP_Text tmpText;
     [SerializeField] Button button;
-    public UnityEvent onTextEnd;
 
+    [SerializeField] float defaultTextDelay;
+    [SerializeField] float defaultUnderbarDelay;
+    public UnityEvent onTextEnd;
+    private WaitForSeconds defaultTextDelayWfs;
+    private WaitForSeconds defaultUnderbarDelayWfs;
+
+    public void SetCorrectPosition(float width)
+    {
+        RectTransform rectTransform =(RectTransform)transform; 
+        Vector3 pos = new Vector3(-1.5f - width, 0, 0);
+        rectTransform.localPosition = pos;
+    }
 
     void Awake()
     {
         ClearText();
         DisableButton();
+        defaultTextDelayWfs = new WaitForSeconds(defaultTextDelay);
+        defaultUnderbarDelayWfs = new WaitForSeconds(defaultUnderbarDelay);
     }
     public void EnableButton()
     {
@@ -44,6 +57,8 @@ public class TextSequence : MonoBehaviour
         // UTF-8 인코딩 방식으로 저장하지 않는다.
         // 한글 문자 형성 공식 {(초성×28x21)+(중성×28)+종성}+44032 
         // (종성 0~27, 중성 0~20)
+        if (delay == null) delay = defaultTextDelayWfs;
+        if (underbarDelay == null) underbarDelay = defaultUnderbarDelayWfs;
         string resultText = "";
         tmpText.text = "";
         foreach (char c in input)
