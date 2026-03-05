@@ -10,6 +10,7 @@ public class Monitor : MonoBehaviour
     [SerializeField] private Button powerButton;
     [SerializeField] private Button startButton;
     [SerializeField] CameraController cameraController;
+    [SerializeField] RectTransform canvasTransform;
     [SerializeField] Screen screen;
 
     void Awake()
@@ -17,6 +18,7 @@ public class Monitor : MonoBehaviour
         powerButton.onClick.AddListener(screen.Toggle);
         startButton.onClick.AddListener(GameStart);
         cameraController.onZoomed.AddListener(ActiveRayCaster);
+        cameraController.onZoomed.AddListener(SendDistanceToScreen);
     }
 
     public void ActiveRayCaster()
@@ -28,5 +30,10 @@ public class Monitor : MonoBehaviour
         raycaster.enabled = false;
         startButton.gameObject.SetActive(false);
         cameraController.GameStartButtonClicked = true;
+    }
+    private void SendDistanceToScreen()
+    {
+        screen.SetCursorVariables(cameraController.DistanceBetweenOrigin + canvasTransform.position.z);
+        
     }
 }

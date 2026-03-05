@@ -12,6 +12,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] float moveSpeed;
     [SerializeField] float tolerance;
 
+    public float DistanceBetweenOrigin => -transform.position.z;
+
     public UnityEvent onZoomed;
 
     public bool GameStartButtonClicked {get; set;}
@@ -29,7 +31,6 @@ public class CameraController : MonoBehaviour
         if (!GameStartButtonClicked) return;
         if (Vector3.Distance(mainCamera.transform.position, endingPosition) < tolerance)
         {
-            mainCamera.transform.position = endingPosition;
             onZoomed.Invoke();
             this.enabled = false;
         }

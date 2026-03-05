@@ -15,7 +15,7 @@ public class TextSequence : MonoBehaviour
 
     [SerializeField] float textDelay;
     [SerializeField] float underbarDelay;
-    public UnityEvent onTextEnd;
+    private UnityEvent onTextEnd;
     private WaitForSeconds textDelayWfs;
     private WaitForSeconds underbarDelayWfs;
 
@@ -28,6 +28,7 @@ public class TextSequence : MonoBehaviour
 
     void Awake()
     {
+        onTextEnd = new UnityEvent();
         textDelayWfs = new WaitForSeconds(textDelay);
         underbarDelayWfs = new WaitForSeconds(underbarDelay);
     }

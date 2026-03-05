@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,7 +26,13 @@ public class ScreenContentsViewer
   public string CurrentNo => CurrentQuestion.noString == "" ? "NO" : CurrentQuestion.noString;
   public bool IsLastSentence => currentSentenceIndex == CurrentQuestion.sentences.Length - 1;
   public bool IsExceedQuestionCount => currentQuestionIndex >= QuestionCount;
-  public ScreenContentsViewer(AskText ask, TextSequence sentenceSeq, Button nextButton, QuestionListSO questionList, float textDelay, float underbarDelay)
+  public ScreenContentsViewer(
+    AskText ask, 
+    TextSequence sentenceSeq, 
+    Button nextButton, 
+    QuestionListSO questionList, 
+    float textDelay, 
+    float underbarDelay)
   {
     this.ask = ask;
     this.questionList = questionList;
@@ -56,6 +63,19 @@ public class ScreenContentsViewer
     ask.AddNoButtonListener(ReadQuestion);
   }
 
+  private void PrintAskingAfterSentence()
+  {
+    sentenceSeq.RemoveTextEndListener(PrintAskingAfterSentence);
+    ask.SetYesPositon();
+    ask.ReadAsking(CurrentYes, CurrentNo);
+    currentQuestionIndex++;
+  }
+  private void EnableNextAfterSentence()
+  {
+    sentenceSeq.RemoveTextEndListener(EnableNextAfterSentence);
+    EnableNextButton();
+  }
+
 
   public void ReadQuestion()
   {
@@ -63,28 +83,21 @@ public class ScreenContentsViewer
     HideAsk();
     if (currentSentenceRoutine != null) CoroutineHelper.Stop(currentSentenceRoutine);
     if (IsExceedQuestionCount) return;
-    currentSentenceRoutine = CoroutineHelper.Start(sentenceSeq.TextRoutine(CurrentSentence, defaultTextDelayWfs, defaultUnderbarDelayWfs));
+    currentSentenceRoutine = CoroutineHelper.Start(sentenceSeq.TextRoutine(
+      CurrentSentence, 
+      defaultTextDelayWfs, 
+      defaultUnderbarDelayWfs));
     // 마지막 질문지 문장일 경우
     if (IsLastSentence)
     {
       currentSentenceIndex = 0;
       ask.SetWidthTesterText(CurrentYes);
-      sentenceSeq.onTextEnd.AddListener(() =>
-      {
-        sentenceSeq.onTextEnd.RemoveAllListeners();
-        ask.SetYesPositon();
-        ask.ReadAsking(CurrentYes, CurrentNo);
-        currentQuestionIndex++;
-      });
+      sentenceSeq.AddTextEndListner(PrintAskingAfterSentence);
     }
     else
     {
       currentSentenceIndex++;
-      sentenceSeq.onTextEnd.AddListener(() =>
-      {
-        sentenceSeq.onTextEnd.RemoveAllListeners();
-        EnableNextButton();
-      });
+      sentenceSeq.AddTextEndListner(EnableNextAfterSentence);
     }
   }
 }

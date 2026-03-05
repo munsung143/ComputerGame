@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -11,10 +12,17 @@ public class AskText : MonoBehaviour
     [SerializeField] TextSequence noSeq;
     [SerializeField] TMP_Text widthTester;
 
+
+    private string yes;
+    private string no;
+
     void Awake()
     {
         ClearAsking();
         DisableAsking();
+    }
+    void Start()
+    {
         //NO 출력 후 항상 버튼 활성화 설정
         AddNoEndListner(EnableAsking);
     }
@@ -72,19 +80,22 @@ public class AskText : MonoBehaviour
         yesSeq.SetCorrectPosition(width);
     }
 
-
+    private void ReadSepAfterYes()
+    {
+        yesSeq.RemoveTextEndListener(ReadSepAfterYes);
+        StartCoroutine(sepSeq.TextRoutine("/", null, null, false));
+    }
+    private void ReadNoAfterSep()
+    {
+        sepSeq.RemoveTextEndListener(ReadNoAfterSep);
+        StartCoroutine(noSeq.TextRoutine(this.no, null, null, false));
+    }
     public void ReadAsking(string yes, string no)
     {
-        CoroutineHelper.Start(yesSeq.TextRoutine(yes, null, null, false));
-        yesSeq.onTextEnd.AddListener(() =>
-        {
-            yesSeq.onTextEnd.RemoveAllListeners();
-            CoroutineHelper.Start(sepSeq.TextRoutine("/", null, null, false));
-        });
-        sepSeq.onTextEnd.AddListener(() =>
-        {
-            sepSeq.onTextEnd.RemoveAllListeners();
-            CoroutineHelper.Start(noSeq.TextRoutine(no, null, null, false));
-        });
+        this.yes = yes;
+        this.no = no;
+        StartCoroutine(yesSeq.TextRoutine(yes, null, null, false));
+        yesSeq.AddTextEndListner(ReadSepAfterYes);
+        sepSeq.AddTextEndListner(ReadNoAfterSep);
     }
 }

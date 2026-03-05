@@ -20,15 +20,26 @@ public class Screen : MonoBehaviour
 
     // 사용
     [SerializeField] GameObject screenOffPanel;
+    [SerializeField] CursorController cursor;
     public UnityEvent onScreenOn;
     private bool isOn;
 
-
     void Awake()
     {
-        viewer = new ScreenContentsViewer(ask, sentenceSeq, nextButton, questionList, defaultTextDelay, defaultUnderbarDelay);
+        viewer = new ScreenContentsViewer(
+            ask, 
+            sentenceSeq, 
+            nextButton, 
+            questionList, 
+            defaultTextDelay, 
+            defaultUnderbarDelay);
         Off();
         onScreenOn.AddListener(FirstReader);
+    }
+
+    public void SetCursorVariables(float Depth)
+    {
+        cursor.SetValues((RectTransform)transform, Depth);
     }
 
     public void FirstReader()
@@ -47,10 +58,12 @@ public class Screen : MonoBehaviour
         screenOffPanel.SetActive(false);
         isOn = true;
         onScreenOn?.Invoke();
+        cursor.GetScreenState(isOn);
     }
     public void Off()
     {
         screenOffPanel.SetActive(true);
         isOn = false;
+        cursor.GetScreenState(isOn);
     }
 }

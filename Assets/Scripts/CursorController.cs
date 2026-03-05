@@ -1,35 +1,48 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using TreeEditor;
+using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class CursorController : MonoBehaviour
 {
-
-    [SerializeField] TMP_Text textText;
-    [SerializeField] TMP_Text textText2;
-
-    [SerializeField] RectTransform screen;
+    RectTransform screen;
     Camera cam;
+    float cameraDepth;
+    float halfWidth;
+    float halfHelght;
+    bool screenOn;
     void Awake()
     {
         cam = Camera.main;
     }
     void Update()
     {
+        if (screen == null) return;
         Vector3 input = Input.mousePosition;
-        input.z =61 - 3.1f;
+        input.z = cameraDepth;
         Vector3 s2w = cam.ScreenToWorldPoint(input);
-        Vector3 inverse = screen.InverseTransformPoint(s2w);
-        float width2 = screen.rect.width / 2;
-        float height2 = screen.rect.height / 2;
-        float x = inverse.x;
-        float y = inverse.y;
-        if (x > width2 || x < -width2 || y > height2 || y < -height2) return;
-        textText.text = s2w.ToString();
+        Vector3 i = screen.InverseTransformPoint(s2w);
+        if (i.x > halfWidth || i.x < -halfWidth || i.y > halfHelght || i.y < -halfHelght || !screenOn)
+        {
+            Cursor.visible = true;
+            return;
+        }
+        Cursor.visible = false;
         transform.position = s2w;
-        textText2.text = screen.InverseTransformPoint(s2w).ToString();
 
+    }
+    public void SetValues(RectTransform trs, float depth)
+    {
+        screen = trs;
+        cameraDepth = depth;
+        halfWidth = trs.rect.width / 2;
+        halfHelght = trs.rect.height / 2;
+    }
+    public void GetScreenState(bool isOn)
+    {
+        this.screenOn = isOn;
     }
 }
