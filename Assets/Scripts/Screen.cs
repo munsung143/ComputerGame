@@ -21,6 +21,7 @@ public class Screen : MonoBehaviour
     // 사용
     [SerializeField] GameObject screenOffPanel;
     [SerializeField] CursorController cursor;
+    [SerializeField] TimeText timer;
     public UnityEvent onScreenOn;
     private bool isOn;
 
@@ -46,6 +47,7 @@ public class Screen : MonoBehaviour
     {
         onScreenOn.RemoveListener(FirstReader);
         viewer.ReadQuestion();
+        timer.TimerOn = true;
     }
 
     public void Toggle()

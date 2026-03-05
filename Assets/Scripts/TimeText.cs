@@ -7,32 +7,51 @@ using UnityEngine;
 
 public class TimeText : MonoBehaviour
 {
-    [SerializeField] TMP_Text hourTmp;
-    [SerializeField] TMP_Text colonTmp;
     [SerializeField] TMP_Text minuteTmp;
+    [SerializeField] TMP_Text colonTmp;
+    [SerializeField] TMP_Text secondTmp;
 
     [SerializeField] float colonDelay;
 
     private WaitForSeconds colonDelayWfs;
 
+    private float second;
+    private int seconds;
+    private int minutes;
+    bool isColon = true;
+    bool timerOn;
+    public bool TimerOn{ set{timerOn = value;}}
+
     void Awake()
     {
         colonDelayWfs = new WaitForSeconds(colonDelay);
-        StartCoroutine(TimeGetRoutine());
+        minuteTmp.text = "00";
+        secondTmp.text = "00";
+    }
+    void Update()
+    {
+        if (!timerOn) return;
+        second += Time.deltaTime;
+        if (second >= 1)
+        {
+            second -= 1;
+            seconds++;
+            isColon = !isColon;
+            if (seconds >= 60)
+            {
+                seconds = 0;
+                minutes++;
+                RenderTime();
+            }
+            RenderTime();
+        }
+
     }
 
-    IEnumerator TimeGetRoutine()
+    void RenderTime()
     {
-        bool isColon = false;
-        while (true)
-        {
-            yield return colonDelayWfs;
-            DateTime now = DateTime.Now;
-            hourTmp.text = now.ToString("HH");
-            minuteTmp.text = now.ToString("mm");
-            colonTmp.alpha = isColon ? 0f : 1f;
-            isColon = !isColon;
-
-        }
+        minuteTmp.text = minutes.ToString("D2");
+        secondTmp.text = seconds.ToString("D2");
+        colonTmp.alpha = isColon ? 0f : 1f;
     }
 }
