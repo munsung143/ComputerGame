@@ -13,7 +13,6 @@ public class Screen : MonoBehaviour
     [SerializeField] TextSequence yesSeq;
     [SerializeField] TextSequence sepSeq;
     [SerializeField] TextSequence noSeq;
-
     [SerializeField] TMP_Text widthTester;
     [SerializeField] GameObject screenOffPanel;
     [SerializeField] Button nextButton;
@@ -28,10 +27,13 @@ public class Screen : MonoBehaviour
     private int currentSentenceIndex;
     private Coroutine currentSentenceRoutine;
 
+    private ScreenContentsViewer viewer;
+
     void Awake()
     {
-        onScreenOn.AddListener(ReadQuestion);
-        onScreenOn.AddListener(() => onScreenOn.RemoveListener(ReadQuestion));
+        viewer = new ScreenContentsViewer();
+        Off();
+        onScreenOn.AddListener(FirstReader);
         nextButton.onClick.AddListener(ReadQuestion);
         textDelayWfs = new WaitForSeconds(textDelay);
         underbarDelayWfs = new WaitForSeconds(underbarDelay);
@@ -43,6 +45,12 @@ public class Screen : MonoBehaviour
         });
         yesSeq.AddButtonListener(ReadQuestion);
         noSeq.AddButtonListener(ReadQuestion);
+    }
+
+    public void FirstReader()
+    {
+        onScreenOn.RemoveListener(FirstReader);
+        ReadQuestion();
     }
     public void ReadQuestion()
     {

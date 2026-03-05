@@ -14,7 +14,6 @@ public class Monitor : MonoBehaviour
 
     void Awake()
     {
-        screen.Off();
         powerButton.onClick.AddListener(screen.Toggle);
         startButton.onClick.AddListener(GameStart);
         cameraController.onZoomed.AddListener(ActiveRayCaster);
