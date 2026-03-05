@@ -13,11 +13,11 @@ public class TextSequence : MonoBehaviour
     [SerializeField] TMP_Text tmpText;
     [SerializeField] Button button;
 
-    [SerializeField] float defaultTextDelay;
-    [SerializeField] float defaultUnderbarDelay;
+    [SerializeField] float textDelay;
+    [SerializeField] float underbarDelay;
     public UnityEvent onTextEnd;
-    private WaitForSeconds defaultTextDelayWfs;
-    private WaitForSeconds defaultUnderbarDelayWfs;
+    private WaitForSeconds textDelayWfs;
+    private WaitForSeconds underbarDelayWfs;
 
     public void SetCorrectPosition(float width)
     {
@@ -28,10 +28,8 @@ public class TextSequence : MonoBehaviour
 
     void Awake()
     {
-        ClearText();
-        DisableButton();
-        defaultTextDelayWfs = new WaitForSeconds(defaultTextDelay);
-        defaultUnderbarDelayWfs = new WaitForSeconds(defaultUnderbarDelay);
+        textDelayWfs = new WaitForSeconds(textDelay);
+        underbarDelayWfs = new WaitForSeconds(underbarDelay);
     }
     public void EnableButton()
     {
@@ -46,6 +44,14 @@ public class TextSequence : MonoBehaviour
         if (button == null) return;
         button.onClick.AddListener(action);
     }
+    public void AddTextEndListner(UnityAction action)
+    {
+        onTextEnd.AddListener(action);
+    }
+    public void RemoveTextEndListener(UnityAction action)
+    {
+        onTextEnd.RemoveListener(action);
+    }
     public void ClearText()
     {
         tmpText.text = "";
@@ -57,8 +63,8 @@ public class TextSequence : MonoBehaviour
         // UTF-8 인코딩 방식으로 저장하지 않는다.
         // 한글 문자 형성 공식 {(초성×28x21)+(중성×28)+종성}+44032 
         // (종성 0~27, 중성 0~20)
-        if (delay == null) delay = defaultTextDelayWfs;
-        if (underbarDelay == null) underbarDelay = defaultUnderbarDelayWfs;
+        if (delay == null) delay = textDelayWfs;
+        if (underbarDelay == null) underbarDelay = underbarDelayWfs;
         string resultText = "";
         tmpText.text = "";
         foreach (char c in input)

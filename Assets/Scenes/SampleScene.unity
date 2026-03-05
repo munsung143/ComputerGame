@@ -134,8 +134,9 @@ GameObject:
   - component: {fileID: 226963968}
   - component: {fileID: 226963967}
   - component: {fileID: 226963966}
+  - component: {fileID: 226963970}
   m_Layer: 0
-  m_Name: "\u3141"
+  m_Name: CoroutineRunner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -227,6 +228,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &226963970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226963965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0abf5233c20f8e4b9ac5fff592efb6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &249618129
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,6 +250,7 @@ GameObject:
   m_Component:
   - component: {fileID: 249618130}
   - component: {fileID: 249618131}
+  - component: {fileID: 249618132}
   m_Layer: 0
   m_Name: AskPanel
   m_TagString: Untagged
@@ -275,6 +289,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 249618129}
   m_CullTransparentMesh: 1
+--- !u!114 &249618132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 249618129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a009b6fcd23926b478bd0efc0298bd65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yesSeq: {fileID: 796327418}
+  sepSeq: {fileID: 1272793836}
+  noSeq: {fileID: 1266249375}
+  widthTester: {fileID: 1543373159}
 --- !u!1 &274181945
 GameObject:
   m_ObjectHideFlags: 0
@@ -625,15 +655,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sentenceSeq: {fileID: 650315124}
-  yesSeq: {fileID: 796327418}
-  sepSeq: {fileID: 1272793836}
-  noSeq: {fileID: 1266249375}
-  widthTester: {fileID: 1543373159}
-  screenOffPanel: {fileID: 2074444622}
-  nextButton: {fileID: 274181947}
-  textDelay: 0.03
-  underbarDelay: 0.3
+  ask: {fileID: 249618132}
+  defaultTextDelay: 0.1
+  defaultUnderbarDelay: 0.3
   questionList: {fileID: 11400000, guid: 50d92366d5e8fcb40a64bef97f0c8de5, type: 2}
+  nextButton: {fileID: 274181947}
+  screenOffPanel: {fileID: 2074444622}
   onScreenOn:
     m_PersistentCalls:
       m_Calls: []
@@ -1235,8 +1262,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tmpText: {fileID: 650315122}
   button: {fileID: 0}
-  defaultTextDelay: 0
-  defaultUnderbarDelay: 0
+  textDelay: 0
+  underbarDelay: 0
   onTextEnd:
     m_PersistentCalls:
       m_Calls: []
@@ -1580,8 +1607,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tmpText: {fileID: 796327415}
   button: {fileID: 796327419}
-  defaultTextDelay: 0.1
-  defaultUnderbarDelay: 0
+  textDelay: 0.5
+  underbarDelay: 0.3
   onTextEnd:
     m_PersistentCalls:
       m_Calls: []
@@ -2219,8 +2246,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tmpText: {fileID: 1266249373}
   button: {fileID: 1266249376}
-  defaultTextDelay: 0.1
-  defaultUnderbarDelay: 0
+  textDelay: 0.5
+  underbarDelay: 0.3
   onTextEnd:
     m_PersistentCalls:
       m_Calls: []
@@ -2688,8 +2715,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tmpText: {fileID: 1272793833}
   button: {fileID: 0}
-  defaultTextDelay: 0.1
-  defaultUnderbarDelay: 0
+  textDelay: 0.5
+  underbarDelay: 0.3
   onTextEnd:
     m_PersistentCalls:
       m_Calls: []
