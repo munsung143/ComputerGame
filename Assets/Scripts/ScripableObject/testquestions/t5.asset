@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: t5
   m_EditorClassIdentifier: 
   code: 
-  requiredQuestionCount: -1
+  requiredQuestionCount: 1
   followingQuestionCode: 
   fixedIndex: -1
   fixChance: 1
@@ -25,4 +25,4 @@ MonoBehaviour:
   yesMessage: []
   noMessage: []
   sentence:
-  - "\uD568\uC815\uC9C8\uBB381"
+  - "\uD568\uC815\uC9C8\uBB385"

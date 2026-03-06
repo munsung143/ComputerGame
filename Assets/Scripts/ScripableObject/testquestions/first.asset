@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aa56716c26269f40af74758cd641e7c, type: 3}
   m_Name: first
   m_EditorClassIdentifier: 
-  code: first
+  code: 
   requiredQuestionCount: -1
-  nextQuestionCode: 
+  followingQuestionCode: 
   fixedIndex: 0
   fixChance: 1
   isTrap: 0

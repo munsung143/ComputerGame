@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: n5
   m_EditorClassIdentifier: 
   code: 
-  requiredQuestionCount: -1
+  requiredQuestionCount: 4
   followingQuestionCode: 
   fixedIndex: -1
   fixChance: 1

@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[CreateAssetMenu(fileName = "NewQuestionList", menuName = "ScriptableObjects/QuestionList", order = 1)]
 public class QuestionList : ScriptableObject
 {
-    // 환영 인사 질문을 포함한 총 개수
-    int maxQuestionCount = 31;
-    int minTrapCount = 7;
+    // 환영 인사 질문을 포함한 게임 클리어 까지의 총 선택 개수
+    public int clearQuestionCount = 31;
+    public int minTrapCount = 7;
     public List<Question> allQuestions;
     public List<Question> normalQuestions;
     public List<Question> trapQuestions;
@@ -18,25 +18,26 @@ public class QuestionList : ScriptableObject
     void OnEnable()
     {
         Init();
+        SetQuestionList();
     }
 
     public void Init()
     {
-        normalQuestions = new();
-        codedQuestions = new();
-        trapQuestions = new();
-        fixedQuestions = new();
+        normalQuestions = new List<Question>();
+        codedQuestions = new Dictionary<string, Question>();
+        trapQuestions = new List<Question>();
+        fixedQuestions = new List<Question>();
         foreach (Question q in allQuestions)
         {
             if (q.code != "")
             {
                 codedQuestions.Add(q.code, q);
-                return;
+                continue;
             }
             if (q.fixedIndex != -1)
             {
                 fixedQuestions.Add(q);
-                return;
+                continue;
             }
             if (q.isTrap)
             {
@@ -46,20 +47,19 @@ public class QuestionList : ScriptableObject
             {
                 normalQuestions.Add(q);
             }
-
         }
     }
 
     public void SetQuestionList()
     {
-        selectedQuestions = new Question[maxQuestionCount];
+        selectedQuestions = new Question[clearQuestionCount];
         // 최대 질문 개수에서 고정된 질문을 제외한 남은 개수
-        int remain = maxQuestionCount;
+        int remain = clearQuestionCount;
 
         //고정된 질문을 미리 질문 배열에 확률에 따라 추가함.
         foreach (Question q in fixedQuestions)
         {
-            float r = UnityEngine.Random.Range(0, 1);
+            float r = UnityEngine.Random.Range(0, 1f);
             if (q.fixChance >= r)
             {
                 selectedQuestions[q.fixedIndex] = q;
@@ -99,17 +99,27 @@ public class QuestionList : ScriptableObject
 
         // 선택 질문 배열을 순회하며, 임시 리스트의 요소들을 차례로 넣음. 이때
         // 질문의 요구 개수가 현재 인덱스 이상이라면, 그보다 1이상 인덱스에 질문을 위치시켜야 함.
-        for (int i = 0, j = 0; i < selectedQuestions.Length;)
+        Debug.Log(remain);
+        Debug.Log(trapCount);
+        Debug.Log(normalCount);
+        Debug.Log(selected.Count);
+        for (int i = 0, j = 0; i < selectedQuestions.Length || j < selected.Count;)
         {
+            Debug.Log($"{i} {j}");
             if (selectedQuestions[i] != null)
             {
                 i++;
                 continue;
             }
-            if (selected[j].requiredQuestionCount <= i)
+            if (selected[j].requiredQuestionCount != -1 && selected[j].requiredQuestionCount <= i)
             {
-                int r = UnityEngine.Random.Range(selected[j].requiredQuestionCount + 1, selectedQuestions.Length);
-                selectedQuestions[r] = selected[j];
+                List<int> temp = new();
+                for (int k = selected[j].requiredQuestionCount + 1; k < selectedQuestions.Length; k++)
+                {
+                    if (selectedQuestions[k] == null) temp.Add(k);
+                }
+                int r = UnityEngine.Random.Range(0, temp.Count);
+                selectedQuestions[temp[r]] = selected[j];
             }
             else
             {

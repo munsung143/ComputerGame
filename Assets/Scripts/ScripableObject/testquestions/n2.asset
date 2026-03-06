@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: n2
   m_EditorClassIdentifier: 
   code: 
-  requiredQuestionCount: -1
-  nextQuestionCode: 
+  requiredQuestionCount: 3
+  followingQuestionCode: 
   fixedIndex: -1
   fixChance: 1
   isTrap: 0

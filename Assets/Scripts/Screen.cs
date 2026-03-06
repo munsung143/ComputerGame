@@ -15,6 +15,7 @@ public class Screen : MonoBehaviour
     [SerializeField] AskText ask;
     [SerializeField] float defaultTextDelay;
     [SerializeField] float defaultUnderbarDelay;
+    
     [SerializeField] QuestionList questionList;
     [SerializeField] Button nextButton;
 
