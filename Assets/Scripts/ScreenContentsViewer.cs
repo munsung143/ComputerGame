@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +8,7 @@ public class ScreenContentsViewer
 
   private AskText ask;
   private TextSequence sentenceSeq;
-  private QuestionListSO questionList;
+  private QuestionList questionList;
 
   private Button nextButton;
   private int currentQuestionIndex;
@@ -27,11 +28,11 @@ public class ScreenContentsViewer
   public bool IsLastSentence => currentSentenceIndex == CurrentQuestion.sentences.Length - 1;
   public bool IsExceedQuestionCount => currentQuestionIndex >= QuestionCount;
   public ScreenContentsViewer(
-    AskText ask, 
-    TextSequence sentenceSeq, 
-    Button nextButton, 
-    QuestionListSO questionList, 
-    float textDelay, 
+    AskText ask,
+    TextSequence sentenceSeq,
+    Button nextButton,
+    QuestionList questionList,
+    float textDelay,
     float underbarDelay)
   {
     this.ask = ask;
@@ -57,10 +58,10 @@ public class ScreenContentsViewer
   }
   public void Init()
   {
-    nextButton.onClick.AddListener(ReadQuestion);
+    nextButton.onClick.AddListener(ReadNext);
     //임시 - YES NO 클릭 시 항상 다음으로 넘어감
-    ask.AddYesButtonListener(ReadQuestion);
-    ask.AddNoButtonListener(ReadQuestion);
+    ask.AddYesButtonListener(ReadNext);
+    ask.AddNoButtonListener(ReadNext);
   }
 
   private void PrintAskingAfterSentence()
@@ -76,17 +77,21 @@ public class ScreenContentsViewer
     EnableNextButton();
   }
 
-
-  public void ReadQuestion()
+  public void PrintText(string text)
   {
     DisableNextButton();
     HideAsk();
     if (currentSentenceRoutine != null) CoroutineHelper.Stop(currentSentenceRoutine);
-    if (IsExceedQuestionCount) return;
     currentSentenceRoutine = CoroutineHelper.Start(sentenceSeq.TextRoutine(
-      CurrentSentence, 
-      defaultTextDelayWfs, 
-      defaultUnderbarDelayWfs));
+    text,
+    defaultTextDelayWfs,
+    defaultUnderbarDelayWfs));
+  }
+
+  public void ReadNext()
+  {
+    if (IsExceedQuestionCount) return;
+    PrintText(CurrentSentence);
     // 마지막 질문지 문장일 경우
     if (IsLastSentence)
     {

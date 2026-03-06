@@ -15,7 +15,7 @@ public class Screen : MonoBehaviour
     [SerializeField] AskText ask;
     [SerializeField] float defaultTextDelay;
     [SerializeField] float defaultUnderbarDelay;
-    [SerializeField] QuestionListSO questionList;
+    [SerializeField] QuestionList questionList;
     [SerializeField] Button nextButton;
 
     // 사용
@@ -46,7 +46,7 @@ public class Screen : MonoBehaviour
     public void FirstReader()
     {
         onScreenOn.RemoveListener(FirstReader);
-        viewer.ReadQuestion();
+        //viewer.ReadNext();
         timer.TimerOn = true;
     }
 

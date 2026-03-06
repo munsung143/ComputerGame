@@ -524,7 +524,6 @@ MonoBehaviour:
   ask: {fileID: 249618132}
   defaultTextDelay: 0.03
   defaultUnderbarDelay: 0.3
-  questionList: {fileID: 11400000, guid: 50d92366d5e8fcb40a64bef97f0c8de5, type: 2}
   nextButton: {fileID: 274181947}
   screenOffPanel: {fileID: 2074444622}
   cursor: {fileID: 2070321934}
