@@ -18,7 +18,6 @@ public class QuestionList : ScriptableObject
     void OnEnable()
     {
         Init();
-        SetQuestionList();
     }
 
     public void Init()
@@ -50,7 +49,7 @@ public class QuestionList : ScriptableObject
         }
     }
 
-    public void SetQuestionList()
+    public Question[] GetRandomQuestionArray()
     {
         selectedQuestions = new Question[clearQuestionCount];
         // 최대 질문 개수에서 고정된 질문을 제외한 남은 개수
@@ -128,5 +127,6 @@ public class QuestionList : ScriptableObject
             }
             j++;
         }
+        return selectedQuestions;
     }
 }
