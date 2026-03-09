@@ -100,7 +100,6 @@ public class QuestionList : ScriptableObject
         // 질문의 요구 개수가 현재 인덱스 이상이라면, 그보다 1이상 인덱스에 질문을 위치시켜야 함.
         for (int i = 0, j = 0; i < selectedQuestions.Length || j < selected.Count;)
         {
-            Debug.Log($"{i} {j}");
             if (selectedQuestions[i] != null)
             {
                 i++;
