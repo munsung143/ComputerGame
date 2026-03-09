@@ -98,10 +98,6 @@ public class QuestionList : ScriptableObject
 
         // 선택 질문 배열을 순회하며, 임시 리스트의 요소들을 차례로 넣음. 이때
         // 질문의 요구 개수가 현재 인덱스 이상이라면, 그보다 1이상 인덱스에 질문을 위치시켜야 함.
-        Debug.Log(remain);
-        Debug.Log(trapCount);
-        Debug.Log(normalCount);
-        Debug.Log(selected.Count);
         for (int i = 0, j = 0; i < selectedQuestions.Length || j < selected.Count;)
         {
             Debug.Log($"{i} {j}");

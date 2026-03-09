@@ -21,7 +21,7 @@ public class TextSequence : MonoBehaviour
 
     public void SetCorrectPosition(float width)
     {
-        RectTransform rectTransform =(RectTransform)transform; 
+        RectTransform rectTransform = (RectTransform)transform;
         Vector3 pos = new Vector3(-1.5f - width, 0, 0);
         rectTransform.localPosition = pos;
     }
@@ -44,6 +44,11 @@ public class TextSequence : MonoBehaviour
     {
         if (button == null) return;
         button.onClick.AddListener(action);
+    }
+    public void RemoveButtonListener(UnityAction action)
+    {
+        if (button == null) return;
+        button.onClick.RemoveListener(action);
     }
     public void AddTextEndListner(UnityAction action)
     {

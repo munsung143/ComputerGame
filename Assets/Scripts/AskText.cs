@@ -54,13 +54,37 @@ public class AskText : MonoBehaviour
     {
         noSeq.AddTextEndListner(action);
     }
+    UnityAction currentYesAction;
+    UnityAction currentNoAction;
     public void AddYesButtonListener(UnityAction action)
     {
-        yesSeq.AddButtonListener(action);
+        currentYesAction = action;
+        yesSeq.AddButtonListener(YesListener);
     }
     public void AddNoButtonListener(UnityAction action)
     {
-        noSeq.AddButtonListener(action);
+        currentNoAction = action;
+        noSeq.AddButtonListener(NoListener);
+    }
+    public void YesListener()
+    {
+        yesSeq.RemoveButtonListener(YesListener);
+        currentYesAction?.Invoke();
+        currentYesAction = null;
+    }
+    public void NoListener()
+    {
+        noSeq.RemoveButtonListener(NoListener);
+        currentNoAction?.Invoke();
+        currentNoAction = null;
+    }
+    public void RemoveYesButtonListener(UnityAction action)
+    {
+        yesSeq.RemoveButtonListener(action);
+    }
+    public void RemoveNoButtonListener(UnityAction action)
+    {
+        noSeq.RemoveButtonListener(action);
     }
     public IEnumerator YesRoutine(string yes)
     {

@@ -3,13 +3,22 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public enum AskingEvent
+{
+    Next,
+    ForceStop,
+    FollowQuestion,
+    Reset,
+    BlueScreen
+}
+
 
 public interface IYesNO
 {
     public string YesText { get; }
     public string NoText { get; }
-    public string YesEvent { get; }
-    public string NoEvent { get; }
+    public AskingEvent YesEvent { get; }
+    public AskingEvent NoEvent { get; }
     public string[] YesMessage { get; }
     public string[] NoMessage { get; }
 }

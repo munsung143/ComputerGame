@@ -36,7 +36,7 @@ public class Screen : MonoBehaviour
             defaultTextDelay, 
             defaultUnderbarDelay);
         Off();
-        onScreenOn.AddListener(FirstReader);
+        onScreenOn.AddListener(ReadQustionListener);
     }
 
     public void SetCursorVariables(float Depth)
@@ -44,10 +44,10 @@ public class Screen : MonoBehaviour
         cursor.SetValues((RectTransform)transform, Depth);
     }
 
-    public void FirstReader()
+    public void ReadQustionListener()
     {
-        onScreenOn.RemoveListener(FirstReader);
-        viewer.SetNextQuestionAndReadSentence();
+        onScreenOn.RemoveListener(ReadQustionListener);
+        viewer.ReadQuestion();
         timer.TimerOn = true;
     }
 
