@@ -56,12 +56,12 @@ public class AskText : MonoBehaviour
     }
     UnityAction currentYesAction;
     UnityAction currentNoAction;
-    public void AddYesButtonListener(UnityAction action)
+    public void AddYesButtonOnceListener(UnityAction action)
     {
         currentYesAction = action;
         yesSeq.AddButtonListener(YesListener);
     }
-    public void AddNoButtonListener(UnityAction action)
+    public void AddNoButtonOnceListener(UnityAction action)
     {
         currentNoAction = action;
         noSeq.AddButtonListener(NoListener);

@@ -9,7 +9,8 @@ public class TextSequence : MonoBehaviour
 {
 
     private static int COMPOSITE_KOREAN_START_AT = 0xAC00;
-    private static int[] FIRST_KOREAN_LETTER_TABLE = { 1, 2, 4, 7, 8, 9, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
+    private static int SINGLE_KOREAN_START_AT = 0x3130;
+    private static int[] SINGLE_KOREAN_TABLE = { 1, 2, 4, 7, 8, 9, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
     [SerializeField] TMP_Text tmpText;
     [SerializeField] Button button;
 
@@ -63,7 +64,7 @@ public class TextSequence : MonoBehaviour
         tmpText.text = "";
     }
 
-    public IEnumerator TextRoutine(string input, WaitForSeconds delay, WaitForSeconds underbarDelay, bool useUnderbar = true)
+    public IEnumerator TextRoutine(string input, WaitForSeconds delay, WaitForSeconds underbarDelay, bool useUnderbar = true, string initial = "")
     {
         // char는 해당 문자의 유니코드 값만을 저장한다.
         // UTF-8 인코딩 방식으로 저장하지 않는다.
@@ -71,8 +72,8 @@ public class TextSequence : MonoBehaviour
         // (종성 0~27, 중성 0~20)
         if (delay == null) delay = textDelayWfs;
         if (underbarDelay == null) underbarDelay = underbarDelayWfs;
-        string resultText = "";
-        tmpText.text = "";
+        string resultText = initial;
+        tmpText.text = resultText;
         foreach (char c in input)
         {
             yield return delay;
@@ -85,7 +86,7 @@ public class TextSequence : MonoBehaviour
                 composite /= 21;
                 int first = composite;
 
-                char letter = (char)(FIRST_KOREAN_LETTER_TABLE[first] + 0x3130);
+                char letter = (char)(SINGLE_KOREAN_TABLE[first] + SINGLE_KOREAN_START_AT);
                 resultText = $"{resultText}{letter}";
                 tmpText.text = resultText;
 

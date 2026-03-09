@@ -6,10 +6,8 @@ using UnityEngine.UI;
 
 public enum ScreenViewingState
 {
-  None,
-  Sentencing,
-  SentenceEnd
-  
+  Ready, // 화면 클릭해서 다음으로 넘어갈 준비가 됨.
+  DoSomething // 다음으로 넘어갈 준비가 되지 않음.
 }
 
 public class ScreenContentsViewer
@@ -29,7 +27,6 @@ public class ScreenContentsViewer
   private Question[] questions;
 
   public Question CurrentQuestion => questions[currentQuestionIndex];
-  public bool IsExceedQuestionCount => currentQuestionIndex >= questions.Length;
   public ISentencePrintable CurrentSentencePrintable
   {
     get
@@ -40,6 +37,7 @@ public class ScreenContentsViewer
   }
   public string CurrentSentence => CurrentSentencePrintable.Sentence[currentSentenceIndex];
   public bool IsLastSentence => currentSentenceIndex == CurrentSentencePrintable.Sentence.Length - 1;
+  public bool NoMoreQuestion => currentQuestionIndex >= questionList.clearQuestionCount;
   public IYesNO CurrentYesNo
   {
     get
@@ -69,23 +67,9 @@ public class ScreenContentsViewer
     defaultUnderbarDelayWfs = new WaitForSeconds(underbarDelay);
     Init();
   }
-
-  public void HideAsk()
-  {
-    ask.ClearAsking();
-    ask.DisableAsking();
-  }
-  public void EnableNextButton()
-  {
-    nextButton.enabled = true;
-  }
-  public void DisableNextButton()
-  {
-    nextButton.enabled = false;
-  }
   public void Init()
   {
-    nextButton.onClick.AddListener(ReadQuestion);
+    nextButton.onClick.AddListener(ReadQuestionByState);
     questions = questionList.GetRandomQuestionArray();
     events = new Dictionary<AskingEvent, UnityAction>();
     events.Add(AskingEvent.Next, Next);
@@ -93,16 +77,56 @@ public class ScreenContentsViewer
     events.Add(AskingEvent.FollowQuestion, FollowQuestion);
     events.Add(AskingEvent.Reset, Reset);
   }
-  public void ReadQuestion()
+  private void HideAsk()
   {
-    if (CurrentSentencePrintable == null) return;
-    DisableNextButton();
+    ask.ClearAsking();
+    ask.DisableAsking();
+  }
+  public void ReadQuestionByState()
+  {
+    if (state != ScreenViewingState.Ready) return;
+    ReadCurrentQuestion();
+
+  }
+  private void ReadSentenceByState()
+  {
+    if (state != ScreenViewingState.Ready) return;
+    ReadSentence();
+  }
+
+
+  // 질문의 시작점
+  private void ReadCurrentQuestion()
+  {
+    state = ScreenViewingState.DoSomething;
+    if (NoMoreQuestion)
+    {
+      GameEnd();
+    }
+    else if (CurrentSentencePrintable != null)
+    {
+      ReadSentenceQuestion();
+    }
+  }
+
+  // 문장형 질문의 시작점 (항상 질문의 처음부터)
+  // 이때부터 다음 버튼을 누르면, 다음 질문이 아닌 다음 문장을 읽는다.
+  private void ReadSentenceQuestion()
+  {
+    currentSentenceIndex = 0;
+    nextButton.onClick.RemoveListener(ReadQuestionByState);
+    nextButton.onClick.AddListener(ReadSentenceByState);
+    ReadSentence();
+  }
+  // 질문의 문장을 순차적으로 읽는 부분
+  private void ReadSentence()
+  {
+    state = ScreenViewingState.DoSomething;
     HideAsk();
     PrintText(CurrentSentence);
-    // 센텐스 출력 직후, 화면 버튼을 활성화 하거나, YES/NO를 출력한다.
     if (IsLastSentence)
     {
-      currentSentenceIndex = 0;
+      nextButton.onClick.RemoveListener(ReadSentenceByState);
       if (CurrentYesNo == null) return;
       ask.SetWidthTesterText(CurrentYes);
       sentenceSeq.AddTextEndListner(PrintAskingListener);
@@ -110,9 +134,8 @@ public class ScreenContentsViewer
     else
     {
       currentSentenceIndex++;
-      sentenceSeq.AddTextEndListner(EnableNextButtonListener);
+      sentenceSeq.AddTextEndListner(SetReadyListener);
     }
-
   }
 
   private void PrintAskingListener()
@@ -120,13 +143,13 @@ public class ScreenContentsViewer
     sentenceSeq.RemoveTextEndListener(PrintAskingListener);
     ask.SetYesPositon();
     ask.ReadAsking(CurrentYes, CurrentNo);
-    ask.AddYesButtonListener(CurrentYesEvent);
-    ask.AddNoButtonListener(CurrentNoEvent);
+    ask.AddYesButtonOnceListener(CurrentYesEvent);
+    ask.AddNoButtonOnceListener(CurrentNoEvent);
   }
-  private void EnableNextButtonListener()
+  private void SetReadyListener()
   {
-    sentenceSeq.RemoveTextEndListener(EnableNextButtonListener);
-    EnableNextButton();
+    sentenceSeq.RemoveTextEndListener(SetReadyListener);
+    state = ScreenViewingState.Ready;
   }
 
   private void PrintText(string text)
@@ -141,8 +164,7 @@ public class ScreenContentsViewer
   private void Next()
   {
     currentQuestionIndex++;
-    Debug.Log(currentQuestionIndex);
-    ReadQuestion();
+    ReadCurrentQuestion();
   }
   private void ForceStop()
   {
@@ -150,10 +172,15 @@ public class ScreenContentsViewer
   }
   private void Reset()
   {
-    
+
   }
   private void FollowQuestion()
   {
-    
+
+
+  }
+  private void GameEnd()
+  {
+
   }
 }

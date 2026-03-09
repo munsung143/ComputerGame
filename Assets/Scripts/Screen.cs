@@ -47,7 +47,7 @@ public class Screen : MonoBehaviour
     public void ReadQustionListener()
     {
         onScreenOn.RemoveListener(ReadQustionListener);
-        viewer.ReadQuestion();
+        viewer.ReadQuestionByState();
         timer.TimerOn = true;
     }
 
