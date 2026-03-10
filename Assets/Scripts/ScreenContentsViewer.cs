@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public enum ScreenViewingState
+public enum ScreenQuestionState
 {
   None,
   ReadingSentence,
@@ -13,7 +13,7 @@ public enum ScreenViewingState
   ReadAfterMessage,
 }
 
-public class ScreenContentsViewer
+public class ScreenQuestionViewer
 {
 
   private AskText ask;
@@ -38,9 +38,9 @@ public class ScreenContentsViewer
       else return null;
     }
   }
-  public string[] currentSentences;
-  public string CurrentSentence => currentSentences[currentSentenceIndex];
-  public bool IsLastSentence => currentSentenceIndex == currentSentences.Length - 1;
+  public string[] targetSentences;
+  public string CurrentSentence => targetSentences[currentSentenceIndex];
+  public bool IsLastSentence => currentSentenceIndex == targetSentences.Length - 1;
   public bool NoMoreQuestion => currentQuestionIndex >= questionList.clearQuestionCount;
   public IYesNO CurrentYesNo
   {
@@ -54,8 +54,8 @@ public class ScreenContentsViewer
   public string CurrentNo => CurrentYesNo.NoText == "" ? "NO" : CurrentYesNo.NoText;
   public UnityAction CurrentYesEvent => events[CurrentYesNo.YesEvent];
   public UnityAction CurrentNoEvent => events[CurrentYesNo.NoEvent];
-  public ScreenViewingState state;
-  public ScreenContentsViewer(
+  public ScreenQuestionState state = ScreenQuestionState.None;
+  public ScreenQuestionViewer(
     AskText ask,
     TextSequence sentenceSeq,
     Button nextButton,
@@ -73,7 +73,6 @@ public class ScreenContentsViewer
   }
   public void Init()
   {
-    nextButton.onClick.AddListener(ReadQuestionByState);
     questions = questionList.GetRandomQuestionArray();
     events = new Dictionary<AskingEvent, UnityAction>();
     events.Add(AskingEvent.Next, Next);
@@ -87,30 +86,29 @@ public class ScreenContentsViewer
     ask.ClearAsking();
     ask.DisableAsking();
   }
-  public void ReadQuestionByState()
+  private void SetNextButtonToReadQuestion()
   {
-    if (state != ScreenViewingState.None) return;
-    ReadCurrentQuestion();
-
+    nextButton.onClick.RemoveListener(PlayEvent);
+    nextButton.onClick.RemoveListener(ReadTargetSentence);
+    nextButton.onClick.AddListener(ReadQuestion);
   }
-  private void ReadSentenceByState()
+  private void SetNextButtonToReadTargetSentence()
   {
-    if (state == ScreenViewingState.ReadSentence)
-    {
-      state = ScreenViewingState.ReadingSentence;
-      ReadSentence();
-    }
-    else if (state == ScreenViewingState.ReadAfterMessage)
-    {
-      state = ScreenViewingState.ReadingAfterMessage;
-      ReadAfterMessage();
-    }
+    nextButton.onClick.RemoveListener(PlayEvent);
+    nextButton.onClick.RemoveListener(ReadQuestion);
+    nextButton.onClick.AddListener(ReadTargetSentence);
   }
-
+  private void SetNextButtonToPlayEvent()
+  {
+    nextButton.onClick.RemoveListener(ReadQuestion);
+    nextButton.onClick.RemoveListener(ReadTargetSentence);
+    nextButton.onClick.AddListener(PlayEvent);
+  }
 
   // 질문의 시작점
-  private void ReadCurrentQuestion()
+  public void ReadQuestion()
   {
+    if (state != ScreenQuestionState.None) return;
     if (NoMoreQuestion)
     {
       GameEnd();
@@ -120,17 +118,29 @@ public class ScreenContentsViewer
       ReadSentenceQuestion();
     }
   }
-
   // 문장형 질문의 시작점 (항상 질문의 처음부터)
   private void ReadSentenceQuestion()
   {
     currentSentenceIndex = 0;
-    currentSentences = CurrentSentencePrintable.Sentence;
+    targetSentences = CurrentSentencePrintable.Sentence;
     // 이때부터 다음 버튼을 누르면, 다음 질문이 아닌 다음 문장을 읽는다.
-    nextButton.onClick.RemoveListener(ReadQuestionByState);
-    nextButton.onClick.AddListener(ReadSentenceByState);
-    state = ScreenViewingState.ReadingSentence;
-    ReadSentence();
+    SetNextButtonToReadTargetSentence();
+    state = ScreenQuestionState.ReadSentence;
+    ReadTargetSentence();
+  }
+  //
+  private void ReadTargetSentence()
+  {
+    if (state == ScreenQuestionState.ReadSentence)
+    {
+      state = ScreenQuestionState.ReadingSentence;
+      ReadSentence();
+    }
+    else if (state == ScreenQuestionState.ReadAfterMessage)
+    {
+      state = ScreenQuestionState.ReadingAfterMessage;
+      ReadAfterMessage();
+    }
   }
   // 문장을 순차적으로 읽는 부분
   private void ReadSentence()
@@ -155,8 +165,7 @@ public class ScreenContentsViewer
     PrintText(CurrentSentence);
     if (IsLastSentence)
     {
-      nextButton.onClick.RemoveListener(ReadSentenceByState);
-      nextButton.onClick.AddListener(PlayEventListener);
+      SetNextButtonToPlayEvent();
       sentenceSeq.AddTextEndListner(SetNoneListener);
     }
     else
@@ -177,22 +186,21 @@ public class ScreenContentsViewer
   private void SetReadSentenceListener()
   {
     sentenceSeq.RemoveTextEndListener(SetReadSentenceListener);
-    state = ScreenViewingState.ReadSentence;
+    state = ScreenQuestionState.ReadSentence;
   }
   private void SetReadAfterMessageListener()
   {
     sentenceSeq.RemoveTextEndListener(SetReadAfterMessageListener);
-    state = ScreenViewingState.ReadAfterMessage;
+    state = ScreenQuestionState.ReadAfterMessage;
   }
   private void SetNoneListener()
   {
     sentenceSeq.RemoveTextEndListener(SetNoneListener);
-    state = ScreenViewingState.None;
+    state = ScreenQuestionState.None;
   }
-  private void PlayEventListener()
+  private void PlayEvent()
   {
-    if (state != ScreenViewingState.None) return;
-    nextButton.onClick.RemoveListener(PlayEventListener);
+    if (state != ScreenQuestionState.None) return;
     if (yesClicked)
     {
       CurrentYesEvent.Invoke();
@@ -215,13 +223,14 @@ public class ScreenContentsViewer
   private bool yesClicked;
   private void OnYes()
   {
+    // 결과 메시지 출력부
     yesClicked = true;
     if (CurrentYesNo.YesMessage.Length != 0)
     {
-      currentSentences = CurrentYesNo.YesMessage;
+      targetSentences = CurrentYesNo.YesMessage;
       currentSentenceIndex = 0;
-      state = ScreenViewingState.ReadingAfterMessage;
-      ReadAfterMessage();
+      state = ScreenQuestionState.ReadAfterMessage;
+      ReadTargetSentence();
     }
     else
     {
@@ -233,10 +242,10 @@ public class ScreenContentsViewer
     yesClicked = false;
     if (CurrentYesNo.NoMessage.Length != 0)
     {
-      currentSentences = CurrentYesNo.NoMessage;
+      targetSentences = CurrentYesNo.NoMessage;
       currentSentenceIndex = 0;
-      state = ScreenViewingState.ReadingAfterMessage;
-      ReadAfterMessage();
+      state = ScreenQuestionState.ReadAfterMessage;
+      ReadTargetSentence();
     }
     else
     {
@@ -250,8 +259,9 @@ public class ScreenContentsViewer
   {
     currentQuestionIndex++;
     currentQuestion = questionList.selectedQuestions[currentQuestionIndex];
-    ReadCurrentQuestion();
-    
+    state = ScreenQuestionState.None;
+    ReadQuestion();
+
   }
   private void ForceStop()
   {
@@ -264,7 +274,8 @@ public class ScreenContentsViewer
   private void FollowQuestion()
   {
     currentQuestion = questionList.codedQuestions[currentQuestion.followingQuestionCode];
-    ReadCurrentQuestion();
+    state = ScreenQuestionState.None;
+    ReadQuestion();
   }
   private void GameEnd()
   {

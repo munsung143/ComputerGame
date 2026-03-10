@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class Screen : MonoBehaviour
 {
     // screenContentsViewer 제공
-    private ScreenContentsViewer viewer;
+    private ScreenQuestionViewer viewer;
     [SerializeField] TextSequence sentenceSeq;
     [SerializeField] AskText ask;
     [SerializeField] float defaultTextDelay;
@@ -28,7 +28,7 @@ public class Screen : MonoBehaviour
 
     void Awake()
     {
-        viewer = new ScreenContentsViewer(
+        viewer = new ScreenQuestionViewer(
             ask, 
             sentenceSeq, 
             nextButton, 
@@ -47,7 +47,7 @@ public class Screen : MonoBehaviour
     public void ReadQustionListener()
     {
         onScreenOn.RemoveListener(ReadQustionListener);
-        viewer.ReadQuestionByState();
+        viewer.ReadQuestion();
         timer.TimerOn = true;
     }
 
