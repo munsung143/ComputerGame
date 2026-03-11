@@ -7,15 +7,18 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class Screen : MonoBehaviour
+public interface IScreen
 {
-    // screenContentsViewer 제공
-    private ScreenQuestionViewer viewer;
+    public void AddNextButtonListener(UnityAction action);
+    public void RemoveNextButtonListener(UnityAction action);
+}
+
+public class Screen : MonoBehaviour, IScreen
+{
+    // 제공
+    private QuestionLoop loop;
     [SerializeField] TextSequence sentenceSeq;
     [SerializeField] AskText ask;
-    [SerializeField] float defaultTextDelay;
-    [SerializeField] float defaultUnderbarDelay;
-    
     [SerializeField] QuestionList questionList;
     [SerializeField] Button nextButton;
 
@@ -28,13 +31,11 @@ public class Screen : MonoBehaviour
 
     void Awake()
     {
-        viewer = new ScreenQuestionViewer(
-            ask, 
-            sentenceSeq, 
-            nextButton, 
-            questionList, 
-            defaultTextDelay, 
-            defaultUnderbarDelay);
+        loop = new QuestionLoop(
+            questionList,
+            this,
+            new SentenceUIViewer(sentenceSeq),
+            ask);
         Off();
         onScreenOn.AddListener(ReadQustionListener);
     }
@@ -47,7 +48,7 @@ public class Screen : MonoBehaviour
     public void ReadQustionListener()
     {
         onScreenOn.RemoveListener(ReadQustionListener);
-        viewer.ReadQuestion();
+        loop.PlayCurrentQuestion();
         timer.TimerOn = true;
     }
 
@@ -68,5 +69,13 @@ public class Screen : MonoBehaviour
         screenOffPanel.SetActive(true);
         isOn = false;
         cursor.GetScreenState(isOn);
+    }
+    public void AddNextButtonListener(UnityAction action)
+    {
+        nextButton.onClick.AddListener(action);
+    }
+    public void RemoveNextButtonListener(UnityAction action)
+    {
+        nextButton.onClick.RemoveListener(action);
     }
 }

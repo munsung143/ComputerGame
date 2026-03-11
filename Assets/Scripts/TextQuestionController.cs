@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public enum ScreenQuestionState
+public enum TextQuestionState
 {
   None,
   ReadingSentence,
@@ -13,23 +13,15 @@ public enum ScreenQuestionState
   ReadAfterMessage,
 }
 
-public class ScreenQuestionViewer
+public class TextQuestionController
 {
 
-  private AskText ask;
-  private TextSequence sentenceSeq;
-  private QuestionList questionList;
-  private Button nextButton;
-  private int currentQuestionIndex;
+  private AskText askText;
+  private SentenceUIViewer sentenceUIViewer;
+
+
   private int currentSentenceIndex;
-  private Coroutine currentSentenceRoutine;
-  private WaitForSeconds defaultTextDelayWfs;
-  private WaitForSeconds defaultUnderbarDelayWfs;
-
-  private Dictionary<AskingEvent, UnityAction> events;
-  private Question[] questions;
-
-  public Question currentQuestion;
+  private TextQuestion currentQuestion;
   public ISentencePrintable CurrentSentencePrintable
   {
     get
@@ -41,7 +33,6 @@ public class ScreenQuestionViewer
   public string[] targetSentences;
   public string CurrentSentence => targetSentences[currentSentenceIndex];
   public bool IsLastSentence => currentSentenceIndex == targetSentences.Length - 1;
-  public bool NoMoreQuestion => currentQuestionIndex >= questionList.clearQuestionCount;
   public IYesNO CurrentYesNo
   {
     get
@@ -52,39 +43,27 @@ public class ScreenQuestionViewer
   }
   public string CurrentYes => CurrentYesNo.YesText == "" ? "YES" : CurrentYesNo.YesText;
   public string CurrentNo => CurrentYesNo.NoText == "" ? "NO" : CurrentYesNo.NoText;
-  public UnityAction CurrentYesEvent => events[CurrentYesNo.YesEvent];
-  public UnityAction CurrentNoEvent => events[CurrentYesNo.NoEvent];
-  public ScreenQuestionState state = ScreenQuestionState.None;
-  public ScreenQuestionViewer(
-    AskText ask,
-    TextSequence sentenceSeq,
-    Button nextButton,
-    QuestionList questionList,
-    float textDelay,
-    float underbarDelay)
+  public TextQuestionState state = TextQuestionState.None;
+
+  private Action<UnityAction> addNextListener;
+  private Action<UnityAction> removeNextListener;
+  public TextQuestionController(
+    AskText askText,
+    Action<UnityAction> addNextListener,
+    Action<UnityAction> removeNextListener,
+    SentenceUIViewer sentenceUIViewer,
+    TextQuestion textQuestion)
   {
-    this.ask = ask;
-    this.questionList = questionList;
-    this.sentenceSeq = sentenceSeq;
-    this.nextButton = nextButton;
-    defaultTextDelayWfs = new WaitForSeconds(textDelay);
-    defaultUnderbarDelayWfs = new WaitForSeconds(underbarDelay);
-    Init();
-  }
-  public void Init()
-  {
-    questions = questionList.GetRandomQuestionArray();
-    events = new Dictionary<AskingEvent, UnityAction>();
-    events.Add(AskingEvent.Next, Next);
-    events.Add(AskingEvent.ForceStop, ForceStop);
-    events.Add(AskingEvent.FollowQuestion, FollowQuestion);
-    events.Add(AskingEvent.Reset, Reset);
-    currentQuestion = questionList.selectedQuestions[currentQuestionIndex];
+    this.askText = askText;
+    this.addNextListener = addNextListener;
+    this.removeNextListener = removeNextListener;
+    this.sentenceUIViewer = sentenceUIViewer;
+    currentQuestion = textQuestion;
   }
   private void HideAsk()
   {
-    ask.ClearAsking();
-    ask.DisableAsking();
+    askText.ClearAsking();
+    askText.DisableAsking();
   }
   private void SetNextButtonToReadQuestion()
   {
@@ -108,11 +87,7 @@ public class ScreenQuestionViewer
   // 질문의 시작점
   public void ReadQuestion()
   {
-    if (state != ScreenQuestionState.None) return;
-    if (NoMoreQuestion)
-    {
-      GameEnd();
-    }
+    if (state != TextQuestionState.None) return;
     else if (CurrentSentencePrintable != null)
     {
       ReadSentenceQuestion();
@@ -125,20 +100,20 @@ public class ScreenQuestionViewer
     targetSentences = CurrentSentencePrintable.Sentence;
     // 이때부터 다음 버튼을 누르면, 다음 질문이 아닌 다음 문장을 읽는다.
     SetNextButtonToReadTargetSentence();
-    state = ScreenQuestionState.ReadSentence;
+    state = TextQuestionState.ReadSentence;
     ReadTargetSentence();
   }
   //
   private void ReadTargetSentence()
   {
-    if (state == ScreenQuestionState.ReadSentence)
+    if (state == TextQuestionState.ReadSentence)
     {
-      state = ScreenQuestionState.ReadingSentence;
+      state = TextQuestionState.ReadingSentence;
       ReadSentence();
     }
-    else if (state == ScreenQuestionState.ReadAfterMessage)
+    else if (state == TextQuestionState.ReadAfterMessage)
     {
-      state = ScreenQuestionState.ReadingAfterMessage;
+      state = TextQuestionState.ReadingAfterMessage;
       ReadAfterMessage();
     }
   }
@@ -150,7 +125,7 @@ public class ScreenQuestionViewer
     if (IsLastSentence)
     {
       if (CurrentYesNo == null) return;
-      ask.SetWidthTesterText(CurrentYes);
+      askText.SetWidthTesterText(CurrentYes);
       sentenceSeq.AddTextEndListner(PrintAskingListener);
     }
     else
@@ -178,29 +153,29 @@ public class ScreenQuestionViewer
   private void PrintAskingListener()
   {
     sentenceSeq.RemoveTextEndListener(PrintAskingListener);
-    ask.SetYesPositon();
-    ask.ReadAsking(CurrentYes, CurrentNo);
-    ask.AddYesButtonOnceListener(OnYes);
-    ask.AddNoButtonOnceListener(OnNo);
+    askText.SetYesPositon();
+    askText.ReadAsking(CurrentYes, CurrentNo);
+    askText.AddYesButtonOnceListener(OnYes);
+    askText.AddNoButtonOnceListener(OnNo);
   }
   private void SetReadSentenceListener()
   {
     sentenceSeq.RemoveTextEndListener(SetReadSentenceListener);
-    state = ScreenQuestionState.ReadSentence;
+    state = TextQuestionState.ReadSentence;
   }
   private void SetReadAfterMessageListener()
   {
     sentenceSeq.RemoveTextEndListener(SetReadAfterMessageListener);
-    state = ScreenQuestionState.ReadAfterMessage;
+    state = TextQuestionState.ReadAfterMessage;
   }
   private void SetNoneListener()
   {
     sentenceSeq.RemoveTextEndListener(SetNoneListener);
-    state = ScreenQuestionState.None;
+    state = TextQuestionState.None;
   }
   private void PlayEvent()
   {
-    if (state != ScreenQuestionState.None) return;
+    if (state != TextQuestionState.None) return;
     if (yesClicked)
     {
       CurrentYesEvent.Invoke();
@@ -229,7 +204,7 @@ public class ScreenQuestionViewer
     {
       targetSentences = CurrentYesNo.YesMessage;
       currentSentenceIndex = 0;
-      state = ScreenQuestionState.ReadAfterMessage;
+      state = TextQuestionState.ReadAfterMessage;
       ReadTargetSentence();
     }
     else
@@ -244,41 +219,12 @@ public class ScreenQuestionViewer
     {
       targetSentences = CurrentYesNo.NoMessage;
       currentSentenceIndex = 0;
-      state = ScreenQuestionState.ReadAfterMessage;
+      state = TextQuestionState.ReadAfterMessage;
       ReadTargetSentence();
     }
     else
     {
       CurrentNoEvent.Invoke();
     }
-  }
-
-
-
-  private void Next()
-  {
-    currentQuestionIndex++;
-    currentQuestion = questionList.selectedQuestions[currentQuestionIndex];
-    state = ScreenQuestionState.None;
-    ReadQuestion();
-
-  }
-  private void ForceStop()
-  {
-    Application.Quit();
-  }
-  private void Reset()
-  {
-
-  }
-  private void FollowQuestion()
-  {
-    currentQuestion = questionList.codedQuestions[currentQuestion.followingQuestionCode];
-    state = ScreenQuestionState.None;
-    ReadQuestion();
-  }
-  private void GameEnd()
-  {
-
   }
 }
