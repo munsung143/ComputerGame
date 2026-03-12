@@ -14,10 +14,17 @@ public class SentenceController
     this.stateController = stateController;
     this.sentenceUIViewer = sentenceUIViewer;
   }
-  public void ReadSentence()
+  public void ReadSentence(int index)
   {
     stateController.OnReadingSentence();
-    sentenceUIViewer.PrintText(CurrentSentence);
+    if (currentSentenceIndex == 0)
+    {
+      sentenceUIViewer.PrintTextWithIndex(CurrentSentence, index);
+    }
+    else
+    {
+      sentenceUIViewer.PrintTextWithInitialIndex(CurrentSentence, index);
+    }
   }
   public void OnRead()
   {

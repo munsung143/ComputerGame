@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -25,6 +26,31 @@ public class SentenceUIViewer
     text,
     defaultTextDelayWfs,
     defaultUnderbarDelayWfs));
+  }
+  public void PrintTextWithIndex(string text, int index)
+  {
+    if (index == 0)
+    {
+      PrintText(text);
+      return;
+    }
+    PrintText($"{index}. {text}");
+  }
+
+  public void PrintTextWithInitialIndex(string text, int index)
+  {
+    if (index == 0)
+    {
+      PrintText(text);
+      return;
+    }
+    if (currentSentenceRoutine != null) CoroutineHelper.Stop(currentSentenceRoutine);
+    currentSentenceRoutine = CoroutineHelper.Start(sequence.TextRoutine(
+    text,
+    defaultTextDelayWfs,
+    defaultUnderbarDelayWfs,
+    true,
+    $"{index}. "));
   }
 
   public void AddSentenceEndListener(UnityAction action)

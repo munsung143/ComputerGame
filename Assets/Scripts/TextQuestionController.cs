@@ -20,13 +20,17 @@ public class TextQuestionController : IQuestionReadable
   private SentenceController sentenceController;
   private YesNoController yesNoController;
   public TextQuestionStateController stateController;
+
+  private int index;
   public TextQuestionController(
     AskText askText,
     SentenceUIViewer sentenceUIViewer,
-    TextQuestion textQuestion)
+    TextQuestion textQuestion,
+    int index)
   {
     this.askText = askText;
     this.sentenceUIViewer = sentenceUIViewer;
+    this.index = index;
     currentQuestion = textQuestion;
     stateController = new TextQuestionStateController();
 
@@ -49,7 +53,7 @@ public class TextQuestionController : IQuestionReadable
     if (stateController.IsBusy) return;
     if (stateController.CanReadSentence)
     {
-      sentenceController.ReadSentence();
+      sentenceController.ReadSentence(index);
     }
     else if (stateController.CanReadAnswer)
     {
@@ -57,7 +61,7 @@ public class TextQuestionController : IQuestionReadable
     }
     else if (stateController.CanExecuteNext)
     {
-      yesNoController.InvokeEvent();
+      InvokeEvent();
     }
   }
 

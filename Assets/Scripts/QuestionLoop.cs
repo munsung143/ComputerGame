@@ -60,6 +60,7 @@ public class QuestionLoop
     AskingEventHelper.AddEvent(AskingEvent.Next, Next);
     AskingEventHelper.AddEvent(AskingEvent.FollowQuestion, Following);
     AskingEventHelper.AddEvent(AskingEvent.ForceStop, ForcedStop);
+    AskingEventHelper.AddEvent(AskingEvent.Reset, Reset);
 
     SetNewQuestionArray();
     currentQuestion = questions[currentQuestionIndex];
@@ -89,16 +90,38 @@ public class QuestionLoop
       questionReadable = new TextQuestionController(
         askText,
         sentenceUIViewer,
-        CurrentTextQuestion);
+        CurrentTextQuestion,
+        currentQuestionIndex);
       screen.AddNextButtonListener(questionReadable.ReadQuestion);
       questionReadable.ReadQuestion();
     }
   }
 
+  private void ResetScreen()
+  {
+    askText.ClearAsking();
+    askText.DisableAsking();
+    screen.RemoveNextButtonListener(questionReadable.ReadQuestion);
+  }
+
+  private void Reset()
+  {
+    ResetScreen();
+    SetNewQuestionArray();
+    currentQuestionIndex = 1;
+    currentQuestion = questions[currentQuestionIndex];
+    PlayCurrentQuestion();
+  }
+
   private void Next()
   {
-    screen.RemoveNextButtonListener(questionReadable.ReadQuestion);
+    ResetScreen();
     currentQuestionIndex++;
+    if (NoMoreQuestion)
+    {
+      GameEnd();
+      return;
+    }
     currentQuestion = questions[currentQuestionIndex];
     PlayCurrentQuestion();
   }
@@ -108,9 +131,14 @@ public class QuestionLoop
   }
   private void Following()
   {
-    screen.RemoveNextButtonListener(questionReadable.ReadQuestion);
+    ResetScreen();
     currentQuestion = questionList.codedQuestions[currentQuestion.followingQuestionCode];
     PlayCurrentQuestion();
+  }
+
+  private void GameEnd()
+  {
+    sentenceUIViewer.PrintText("게임 끝");
   }
 
 

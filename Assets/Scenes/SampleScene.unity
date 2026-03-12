@@ -522,8 +522,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sentenceSeq: {fileID: 650315124}
   ask: {fileID: 249618132}
-  defaultTextDelay: 0.03
-  defaultUnderbarDelay: 0.3
   questionList: {fileID: 11400000, guid: 9e029f2cb8198424c9f87ac58d2f3601, type: 2}
   nextButton: {fileID: 274181947}
   screenOffPanel: {fileID: 2074444622}
@@ -2593,7 +2591,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
