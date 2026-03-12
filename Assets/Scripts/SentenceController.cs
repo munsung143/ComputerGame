@@ -14,7 +14,6 @@ public class SentenceController
     this.stateController = stateController;
     this.sentenceUIViewer = sentenceUIViewer;
   }
-  // 문장을 순차적으로 읽는 부분
   public void ReadSentence()
   {
     stateController.OnReadingSentence();

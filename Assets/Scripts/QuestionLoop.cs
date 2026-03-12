@@ -23,7 +23,7 @@ public enum QuestionState
   TextQuestion,
   MinigameQuestion
 }
-public class QuestionLoop : IQuestionLoop
+public class QuestionLoop
 {
   private SentenceUIViewer sentenceUIViewer;
   private AskText askText;
@@ -56,11 +56,13 @@ public class QuestionLoop : IQuestionLoop
     this.screen = screen;
     this.sentenceUIViewer = sentenceUIViewer;
     this.askText = askText;
-  }
 
-  public void AddQuestionIndex()
-  {
-    currentQuestionIndex++;
+    AskingEventHelper.AddEvent(AskingEvent.Next, Next);
+    AskingEventHelper.AddEvent(AskingEvent.FollowQuestion, Following);
+    AskingEventHelper.AddEvent(AskingEvent.ForceStop, ForcedStop);
+
+    SetNewQuestionArray();
+    currentQuestion = questions[currentQuestionIndex];
   }
   public void ResetQuestionIndex()
   {
@@ -73,11 +75,6 @@ public class QuestionLoop : IQuestionLoop
   public void SetCurrentQuestion()
   {
     currentQuestion = questions[currentQuestionIndex];
-  }
-  public void SetNextQuestion()
-  {
-    AddQuestionIndex();
-    SetCurrentQuestion();
   }
   public void SetFollowingQuestion(string code)
   {
@@ -92,13 +89,28 @@ public class QuestionLoop : IQuestionLoop
       questionReadable = new TextQuestionController(
         askText,
         sentenceUIViewer,
-        CurrentTextQuestion,
-        this);
-        //TODO : 여기서 스크린 넥스트버튼 기존 리스너 제거 기능 필요할 듯
-
+        CurrentTextQuestion);
       screen.AddNextButtonListener(questionReadable.ReadQuestion);
       questionReadable.ReadQuestion();
     }
+  }
+
+  private void Next()
+  {
+    screen.RemoveNextButtonListener(questionReadable.ReadQuestion);
+    currentQuestionIndex++;
+    currentQuestion = questions[currentQuestionIndex];
+    PlayCurrentQuestion();
+  }
+  private void ForcedStop()
+  {
+    Application.Quit();
+  }
+  private void Following()
+  {
+    screen.RemoveNextButtonListener(questionReadable.ReadQuestion);
+    currentQuestion = questionList.codedQuestions[currentQuestion.followingQuestionCode];
+    PlayCurrentQuestion();
   }
 
 

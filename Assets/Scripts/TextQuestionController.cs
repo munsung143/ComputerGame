@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -14,7 +15,6 @@ public class TextQuestionController : IQuestionReadable
 
   private AskText askText;
   private SentenceUIViewer sentenceUIViewer;
-  private IQuestionLoop questionLoop;
   private TextQuestion currentQuestion;
 
   private SentenceController sentenceController;
@@ -23,21 +23,19 @@ public class TextQuestionController : IQuestionReadable
   public TextQuestionController(
     AskText askText,
     SentenceUIViewer sentenceUIViewer,
-    TextQuestion textQuestion,
-    IQuestionLoop questionLoop)
+    TextQuestion textQuestion)
   {
     this.askText = askText;
     this.sentenceUIViewer = sentenceUIViewer;
     currentQuestion = textQuestion;
-    this.questionLoop = questionLoop;
     stateController = new TextQuestionStateController();
 
     sentenceController = new SentenceController(currentQuestion, stateController, sentenceUIViewer);
     yesNoController = new YesNoController(currentQuestion, stateController, askText, sentenceUIViewer);
 
     sentenceUIViewer.AddSentenceEndListener(OnSentenceEnd);
-    askText.AddYesButtonListener(yesNoController.OnYes);
-    askText.AddNoButtonListener(yesNoController.OnNo);
+    askText.AddYesButtonListener(OnYesClicked);
+    askText.AddNoButtonListener(OnNoClicked);
   }
   private void HideAsk()
   {
@@ -49,14 +47,12 @@ public class TextQuestionController : IQuestionReadable
   public void ReadQuestion()
   {
     if (stateController.IsBusy) return;
-    else if (stateController.CanReadSentence)
+    if (stateController.CanReadSentence)
     {
-      HideAsk();
       sentenceController.ReadSentence();
     }
     else if (stateController.CanReadAnswer)
     {
-      HideAsk();
       yesNoController.ReadAnswer();
     }
     else if (stateController.CanExecuteNext)
@@ -76,6 +72,25 @@ public class TextQuestionController : IQuestionReadable
     {
       yesNoController.OnRead();
     }
+  }
+  private void InvokeEvent()
+  {
+    sentenceUIViewer.RemoveSentenceEndListener(OnSentenceEnd);
+    askText.RemoveYesButtonListener(OnYesClicked);
+    askText.RemoveNoButtonListener(OnNoClicked);
+    yesNoController.InvokeEvent();
+  }
 
+  private void OnYesClicked()
+  {
+    bool CanReadAnswer = yesNoController.OnYes();
+    if (CanReadAnswer) yesNoController.ReadAnswer();
+    else InvokeEvent();
+  }
+  private void OnNoClicked()
+  {
+    bool CanReadAnswer = yesNoController.OnNo();
+    if (CanReadAnswer) yesNoController.ReadAnswer();
+    else InvokeEvent();
   }
 }
