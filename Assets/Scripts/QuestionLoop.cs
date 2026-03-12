@@ -1,8 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+
+public interface IQuestionLoop
+{
+  public void AddQuestionIndex();
+  public void ResetQuestionIndex();
+  public void SetNewQuestionArray();
+  public void SetCurrentQuestion();
+  public void SetFollowingQuestion(string code);
+  public void PlayCurrentQuestion();
+
+}
 
 public enum QuestionState
 {
@@ -10,7 +23,7 @@ public enum QuestionState
   TextQuestion,
   MinigameQuestion
 }
-public class QuestionLoop
+public class QuestionLoop : IQuestionLoop
 {
   private SentenceUIViewer sentenceUIViewer;
   private AskText askText;
@@ -31,10 +44,10 @@ public class QuestionLoop
       else return null;
     }
   }
-  public TextQuestionController textQuestionController;
+  public IQuestionReadable questionReadable;
 
   public QuestionLoop(
-    QuestionList questionList, 
+    QuestionList questionList,
     IScreen screen,
     SentenceUIViewer sentenceUIViewer,
     AskText askText)
@@ -61,16 +74,30 @@ public class QuestionLoop
   {
     currentQuestion = questions[currentQuestionIndex];
   }
+  public void SetNextQuestion()
+  {
+    AddQuestionIndex();
+    SetCurrentQuestion();
+  }
   public void SetFollowingQuestion(string code)
   {
     currentQuestion = questionList.codedQuestions[code];
   }
+  // 질문을 불러오고, 읽도록 세팅하는 기능
   public void PlayCurrentQuestion()
   {
     if (CurrentTextQuestion != null)
     {
       state = QuestionState.TextQuestion;
-      //textQuestionController = new TextQuestionController();
+      questionReadable = new TextQuestionController(
+        askText,
+        sentenceUIViewer,
+        CurrentTextQuestion,
+        this);
+        //TODO : 여기서 스크린 넥스트버튼 기존 리스너 제거 기능 필요할 듯
+
+      screen.AddNextButtonListener(questionReadable.ReadQuestion);
+      questionReadable.ReadQuestion();
     }
   }
 

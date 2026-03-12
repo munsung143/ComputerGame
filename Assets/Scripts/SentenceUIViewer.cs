@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,5 +14,25 @@ public class SentenceUIViewer
   public SentenceUIViewer(TextSequence sequence)
   {
     this.sequence = sequence;
+    defaultTextDelayWfs = new WaitForSeconds(0.05f);
+    defaultUnderbarDelayWfs = new WaitForSeconds(0.3f);
+  }
+
+  public void PrintText(string text)
+  {
+    if (currentSentenceRoutine != null) CoroutineHelper.Stop(currentSentenceRoutine);
+    currentSentenceRoutine = CoroutineHelper.Start(sequence.TextRoutine(
+    text,
+    defaultTextDelayWfs,
+    defaultUnderbarDelayWfs));
+  }
+
+  public void AddSentenceEndListener(UnityAction action)
+  {
+    sequence.AddTextEndListner(action);
+  }
+  public void RemoveSentenceEndListener(UnityAction action)
+  {
+    sequence.RemoveTextEndListener(action);
   }
 }

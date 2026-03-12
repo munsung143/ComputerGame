@@ -13,8 +13,18 @@ public class AskText : MonoBehaviour
     [SerializeField] TMP_Text widthTester;
 
 
+    public void ClearYes() => yesSeq.ClearText();
+    public void ClearSep() => sepSeq.ClearText();
+    public void ClearNo() => noSeq.ClearText();
+    public void DisableYes() => yesSeq.DisableButton();
+    public void DisableNo() => noSeq.DisableButton();
+
+
     private string yes;
     private string no;
+
+    UnityAction currentYesAction;
+    UnityAction currentNoAction;
 
     void Awake()
     {
@@ -23,16 +33,10 @@ public class AskText : MonoBehaviour
     }
     void Start()
     {
-        //NO 출력 후 항상 버튼 활성화 설정
-        AddNoEndListner(EnableAsking);
+        yesSeq.AddTextEndListner(() => StartCoroutine(sepSeq.TextRoutine("/", null, null, false)));
+        sepSeq.AddTextEndListner(() => StartCoroutine(noSeq.TextRoutine(this.no, null, null, false)));
+        noSeq.AddTextEndListner(EnableAsking);
     }
-
-    public void ClearYes() => yesSeq.ClearText();
-    public void ClearSep() => sepSeq.ClearText();
-    public void ClearNo() => noSeq.ClearText();
-    public void DisableYes() => yesSeq.DisableButton();
-    public void DisableNo() => noSeq.DisableButton();
-
     public void EnableAsking()
     {
         yesSeq.EnableButton();
@@ -50,12 +54,21 @@ public class AskText : MonoBehaviour
         noSeq.ClearText();
     }
 
-    public void AddNoEndListner(UnityAction action)
+    public void ReadAsking(string yes, string no)
     {
-        noSeq.AddTextEndListner(action);
+        this.yes = yes;
+        this.no = no;
+        StartCoroutine(ReadAskingRoutine());
     }
-    UnityAction currentYesAction;
-    UnityAction currentNoAction;
+
+    private IEnumerator ReadAskingRoutine()
+    {
+        widthTester.text = yes;
+        yield return null;
+        float width = widthTester.rectTransform.rect.width;
+        yesSeq.SetCorrectPosition(width);
+        StartCoroutine(yesSeq.TextRoutine(yes, null, null, false));
+    }
     public void AddYesButtonOnceListener(UnityAction action)
     {
         currentYesAction = action;
@@ -66,60 +79,21 @@ public class AskText : MonoBehaviour
         currentNoAction = action;
         noSeq.AddButtonListener(NoListener);
     }
-    public void YesListener()
+
+    public void AddYesButtonListener(UnityAction action) => yesSeq.AddButtonListener(action);
+    public void AddNoButtonListener(UnityAction action) => noSeq.AddButtonListener(action);
+    public void RemoveYesButtonListener(UnityAction action) => yesSeq.RemoveButtonListener(action);
+    public void RemoveNoButtonListener(UnityAction action) => noSeq.RemoveButtonListener(action);
+    private void YesListener()
     {
         yesSeq.RemoveButtonListener(YesListener);
         currentYesAction?.Invoke();
         currentYesAction = null;
     }
-    public void NoListener()
+    private void NoListener()
     {
         noSeq.RemoveButtonListener(NoListener);
         currentNoAction?.Invoke();
         currentNoAction = null;
-    }
-    public void RemoveYesButtonListener(UnityAction action)
-    {
-        yesSeq.RemoveButtonListener(action);
-    }
-    public void RemoveNoButtonListener(UnityAction action)
-    {
-        noSeq.RemoveButtonListener(action);
-    }
-    public IEnumerator YesRoutine(string yes)
-    {
-        return yesSeq.TextRoutine(yes, null, null, false);
-    }
-
-
-    // 텍스트 설정 후, Content size fitter가 크기를 재조정하기까지 시간이 걸리기에, 분리하여 사용.
-    public void SetWidthTesterText(string yes)
-    {
-        widthTester.text = yes;
-    }
-
-    public void SetYesPositon()
-    {
-        float width = widthTester.rectTransform.rect.width;
-        yesSeq.SetCorrectPosition(width);
-    }
-
-    private void ReadSepAfterYes()
-    {
-        yesSeq.RemoveTextEndListener(ReadSepAfterYes);
-        StartCoroutine(sepSeq.TextRoutine("/", null, null, false));
-    }
-    private void ReadNoAfterSep()
-    {
-        sepSeq.RemoveTextEndListener(ReadNoAfterSep);
-        StartCoroutine(noSeq.TextRoutine(this.no, null, null, false));
-    }
-    public void ReadAsking(string yes, string no)
-    {
-        this.yes = yes;
-        this.no = no;
-        StartCoroutine(yesSeq.TextRoutine(yes, null, null, false));
-        yesSeq.AddTextEndListner(ReadSepAfterYes);
-        sepSeq.AddTextEndListner(ReadNoAfterSep);
     }
 }
