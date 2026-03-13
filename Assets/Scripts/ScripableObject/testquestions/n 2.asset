@@ -20,9 +20,10 @@ MonoBehaviour:
   isTrap: 0
   yestText: 
   noText: 
-  yesEvent: 0
+  yesEvent: 3
   noEvent: 0
   yesMessage: []
   noMessage: []
   sentence:
   - "\uB450\uBC88\uC9F8 \uACE0\uC815\uC9C8\uBB38"
+  - "yes\uB204\uB97C \uC2DC \uAC8C\uC784 \uCD08\uAE30\uD654 \uD559\uC778"

@@ -23,10 +23,9 @@ MonoBehaviour:
   yesEvent: 0
   noEvent: 1
   yesMessage:
-  - "\uC815\uB9D0\uB85C"
-  - "\uADF8\uAC83\uC744 \uC6D0\uD558\uB294\uAC00"
+  - "\uCCAB\uBB38\uC7A5"
+  - "\uB450\uBC88\uC9F8"
   noMessage: []
   sentence:
-  - "\uC548\uB155"
-  - "\uC9C0\uAE08\uBD80\uD130\uD560\uAC70\uC57C"
-  - "\uC2DC\uC791 \u3131?"
+  - "\uB9E8 \uCC98\uC74C \uC18C\uAC1C \uC9C8\uBB38"
+  - "yes - \uBA54\uC2DC\uC9C0 \uCD9C\uB825, no - \uAC8C\uC784 \uC885\uB8CC"
