@@ -108,7 +108,7 @@ public class QuestionLoop
   {
     ResetScreen();
     SetNewQuestionArray();
-    currentQuestionIndex = 1;
+    currentQuestionIndex = 0;
     currentQuestion = questions[currentQuestionIndex];
     PlayCurrentQuestion();
   }

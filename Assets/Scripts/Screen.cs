@@ -26,6 +26,7 @@ public class Screen : MonoBehaviour, IScreen
     [SerializeField] GameObject screenOffPanel;
     [SerializeField] CursorController cursor;
     [SerializeField] TimeText timer;
+    [SerializeField] RedScreen redScreen;
     public UnityEvent onScreenOn;
     private bool isOn;
 
@@ -38,6 +39,7 @@ public class Screen : MonoBehaviour, IScreen
             ask);
         Off();
         onScreenOn.AddListener(ReadQustionListener);
+        AskingEventHelper.AddEvent(AskingEvent.RedScreen, redScreen.ScreenOn);
     }
 
     public void SetCursorVariables(float Depth)

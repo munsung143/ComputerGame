@@ -9,7 +9,7 @@ public enum AskingEvent
     ForceStop,
     FollowQuestion,
     Reset,
-    BlueScreen
+    RedScreen
 }
 
 

@@ -24,8 +24,7 @@ MonoBehaviour:
   noEvent: 1
   yesMessage:
   - "\uCCAB\uBB38\uC7A5"
-  - "\uB450\uBC88\uC9F8"
   noMessage: []
   sentence:
-  - "\uB9E8 \uCC98\uC74C \uC18C\uAC1C \uC9C8\uBB38"
+  - "\uC18C\uAC1C"
   - "yes - \uBA54\uC2DC\uC9C0 \uCD9C\uB825, no - \uAC8C\uC784 \uC885\uB8CC"

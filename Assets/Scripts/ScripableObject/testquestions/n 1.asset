@@ -21,10 +21,9 @@ MonoBehaviour:
   yestText: "\uC751"
   noText: "\uC544\uB2C8"
   yesEvent: 2
-  noEvent: 2
+  noEvent: 4
   yesMessage: []
   noMessage: []
   sentence:
-  - "\uCCAB\uBC88\uC9F8 \uACE0\uC815\uC9C8\uBB38"
-  - "\uC778\uB371\uC2A4 \uCD9C\uB825 \uC5EC\uBD80 \uBC0F \uD6C4\uC18D\uC9C8\uBB38
-    \uD655\uC778"
+  - "\uCCAB\uBC88\uC9F8 \uACE0\uC815\uC9C8\uBB38 : yes \uD6C4\uC18D\uC9C8\uBB38,
+    No \uB808\uB4DC\uC2A4\uD06C\uB9B0"
