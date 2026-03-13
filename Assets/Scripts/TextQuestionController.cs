@@ -87,12 +87,14 @@ public class TextQuestionController : IQuestionReadable
 
   private void OnYesClicked()
   {
+    HideAsk();
     bool CanReadAnswer = yesNoController.OnYes();
     if (CanReadAnswer) yesNoController.ReadAnswer();
     else InvokeEvent();
   }
   private void OnNoClicked()
   {
+    HideAsk();
     bool CanReadAnswer = yesNoController.OnNo();
     if (CanReadAnswer) yesNoController.ReadAnswer();
     else InvokeEvent();

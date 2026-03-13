@@ -4,7 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Monitor : MonoBehaviour
+public interface IMonitorEffectProvider
+{
+    public void RemovePowerButtonListener();
+}
+
+public class Monitor : MonoBehaviour, IMonitorEffectProvider
 {
     [SerializeField] private GraphicRaycaster raycaster;
     [SerializeField] private Button powerButton;
@@ -15,6 +20,7 @@ public class Monitor : MonoBehaviour
 
     void Awake()
     {
+        AskingEventRegistry.Monitor = this;
         powerButton.onClick.AddListener(screen.Toggle);
         startButton.onClick.AddListener(GameStart);
         cameraController.onZoomed.AddListener(ActiveRayCaster);
@@ -35,5 +41,9 @@ public class Monitor : MonoBehaviour
     {
         screen.SetCursorVariables(cameraController.DistanceBetweenOrigin + canvasTransform.position.z);
         
+    }
+    public void RemovePowerButtonListener()
+    {
+        powerButton.onClick.RemoveListener(screen.Toggle);
     }
 }

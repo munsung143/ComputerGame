@@ -3,16 +3,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public enum AskingEvent
-{
-    Next,
-    ForceStop,
-    FollowQuestion,
-    Reset,
-    RedScreen
-}
-
-
 public interface IYesNO
 {
     public string YesText { get; }

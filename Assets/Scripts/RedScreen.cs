@@ -2,9 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RedScreen : MonoBehaviour
+
+public interface IRedScreenEffectProvider
 {
-    public void ScreenOn()
+    public void OnRedScreen();
+}
+
+public class RedScreen : MonoBehaviour, IRedScreenEffectProvider
+{
+    public void OnRedScreen()
     {
         gameObject.SetActive(true);
         StartCoroutine(ScreenRoutine());
@@ -15,5 +21,5 @@ public class RedScreen : MonoBehaviour
         yield return new WaitForSeconds(5);
         Application.Quit();
     }
-    
+
 }

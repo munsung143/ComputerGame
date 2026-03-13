@@ -12,7 +12,7 @@ public class YesNoController
   public string CurrentYes => currentYesNo.YesText == "" ? "YES" : currentYesNo.YesText;
   public string CurrentNo => currentYesNo.NoText == "" ? "NO" : currentYesNo.NoText;
   public AskText askText;
-  public UnityAction currentEvent;
+  public AskingEvent currentEvent;
   private SentenceUIViewer sentenceUIViewer;
   private IYesNoState stateController;
   public YesNoController(IYesNO yesNO, IYesNoState stateController, AskText askText, SentenceUIViewer sentenceUIViewer)
@@ -43,21 +43,21 @@ public class YesNoController
   }
   public bool OnYes()
   {
-    currentEvent = AskingEventHelper.GetEvent(currentYesNo.YesEvent);
+    currentEvent = currentYesNo.YesEvent;
     sentences = currentYesNo.YesMessage;
     return sentences.Length != 0;
 
   }
   public bool OnNo()
   {
-    currentEvent = AskingEventHelper.GetEvent(currentYesNo.NoEvent);
+    currentEvent = currentYesNo.NoEvent;
     sentences = currentYesNo.NoMessage;
     return sentences.Length != 0;
   }
 
   public void InvokeEvent()
   {
-    currentEvent.Invoke();
+    AskingEventRegistry.PlayEvent(currentEvent);
   }
 
 

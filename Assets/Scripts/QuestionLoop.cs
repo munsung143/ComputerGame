@@ -6,15 +6,13 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public interface IQuestionLoop
+public interface IQuestionLoopEffectProvider
 {
-  public void AddQuestionIndex();
-  public void ResetQuestionIndex();
-  public void SetNewQuestionArray();
-  public void SetCurrentQuestion();
-  public void SetFollowingQuestion(string code);
-  public void PlayCurrentQuestion();
-
+  public void Reset();
+  public void ReverseNext();
+  public void Next();
+  public void ForcedStop();
+  public void Following();
 }
 
 public enum QuestionState
@@ -23,7 +21,7 @@ public enum QuestionState
   TextQuestion,
   MinigameQuestion
 }
-public class QuestionLoop
+public class QuestionLoop : IQuestionLoopEffectProvider
 {
   private SentenceUIViewer sentenceUIViewer;
   private AskText askText;
@@ -32,6 +30,7 @@ public class QuestionLoop
   private Question[] questions;
   public Question currentQuestion;
   private QuestionState state;
+  private bool reverse;
   public bool NoMoreQuestion => currentQuestionIndex >= questionList.clearQuestionCount;
 
   private IScreen screen;
@@ -52,34 +51,29 @@ public class QuestionLoop
     SentenceUIViewer sentenceUIViewer,
     AskText askText)
   {
+    AskingEventRegistry.QuestionLoop = this;
     this.questionList = questionList;
     this.screen = screen;
     this.sentenceUIViewer = sentenceUIViewer;
     this.askText = askText;
-
-    AskingEventHelper.AddEvent(AskingEvent.Next, Next);
-    AskingEventHelper.AddEvent(AskingEvent.FollowQuestion, Following);
-    AskingEventHelper.AddEvent(AskingEvent.ForceStop, ForcedStop);
-    AskingEventHelper.AddEvent(AskingEvent.Reset, Reset);
-
     SetNewQuestionArray();
     currentQuestion = questions[currentQuestionIndex];
   }
-  public void ResetQuestionIndex()
+
+  public void SetNextIndex()
   {
-    currentQuestionIndex = 1;
+    // 첫번째 질문일 경우도달 시 리버스 상태 해제 및 셔플
+    if (reverse && currentQuestionIndex == 1)
+    {
+      SetNewQuestionArray();
+      reverse = false;
+    }
+    if (reverse) currentQuestionIndex--;
+    else currentQuestionIndex++;
   }
   public void SetNewQuestionArray()
   {
     questions = questionList.GetRandomQuestionArray();
-  }
-  public void SetCurrentQuestion()
-  {
-    currentQuestion = questions[currentQuestionIndex];
-  }
-  public void SetFollowingQuestion(string code)
-  {
-    currentQuestion = questionList.codedQuestions[code];
   }
   // 질문을 불러오고, 읽도록 세팅하는 기능
   public void PlayCurrentQuestion()
@@ -97,26 +91,30 @@ public class QuestionLoop
     }
   }
 
-  private void ResetScreen()
+  private void ResetNextButtonListener()
   {
-    askText.ClearAsking();
-    askText.DisableAsking();
     screen.RemoveNextButtonListener(questionReadable.ReadQuestion);
   }
 
-  private void Reset()
+  public void Reset()
   {
-    ResetScreen();
+    ResetNextButtonListener();
     SetNewQuestionArray();
     currentQuestionIndex = 0;
     currentQuestion = questions[currentQuestionIndex];
     PlayCurrentQuestion();
   }
 
-  private void Next()
+  public void ReverseNext()
   {
-    ResetScreen();
-    currentQuestionIndex++;
+    reverse = true;
+    Next();
+  }
+
+  public void Next()
+  {
+    ResetNextButtonListener();
+    SetNextIndex();
     if (NoMoreQuestion)
     {
       GameEnd();
@@ -125,13 +123,13 @@ public class QuestionLoop
     currentQuestion = questions[currentQuestionIndex];
     PlayCurrentQuestion();
   }
-  private void ForcedStop()
+  public void ForcedStop()
   {
     Application.Quit();
   }
-  private void Following()
+  public void Following()
   {
-    ResetScreen();
+    ResetNextButtonListener();
     currentQuestion = questionList.codedQuestions[currentQuestion.followingQuestionCode];
     PlayCurrentQuestion();
   }

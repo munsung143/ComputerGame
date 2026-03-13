@@ -39,7 +39,7 @@ public class Screen : MonoBehaviour, IScreen
             ask);
         Off();
         onScreenOn.AddListener(ReadQustionListener);
-        AskingEventHelper.AddEvent(AskingEvent.RedScreen, redScreen.ScreenOn);
+        AskingEventRegistry.RedScreen = redScreen;
     }
 
     public void SetCursorVariables(float Depth)
