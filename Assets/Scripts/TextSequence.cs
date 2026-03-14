@@ -119,11 +119,11 @@ public class TextSequence : MonoBehaviour
             yield return underbarDelay;
             if (underlined)
             {
-                resultText = resultText.Remove(resultText.Length - 1);
+                resultText = resultText.Remove(resultText.Length - 2);
             }
             else
             {
-                resultText = $"{resultText}_";
+                resultText = $"{resultText} _";
             }
             underlined = !underlined;
             tmpText.text = resultText;
