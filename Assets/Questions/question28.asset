@@ -10,20 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9aa56716c26269f40af74758cd641e7c, type: 3}
-  m_Name: n 2
+  m_Name: question28
   m_EditorClassIdentifier: 
   code: 
   requiredQuestionCount: -1
   followingQuestionCode: 
-  fixedIndex: 2
+  fixedIndex: -1
   fixChance: 1
-  isTrap: 0
+  isTrap: 1
   yestText: 
   noText: 
-  yesEvent: 5
+  yesEvent: 3
   noEvent: 0
-  yesMessage: []
+  yesMessage:
+  - "\uD1B5\uACC4\uC5D0 \uBC18\uC601\uB418\uC9C0 \uC54A\uB294 \uC124\uBB38\uC870\uC0AC\uB294
+    \uC798\uBABB\uB41C \uC124\uBB38\uC870\uC0AC \uC785\uB2C8\uB2E4."
   noMessage: []
   sentence:
-  - "\uB450\uBC88\uC9F8 \uACE0\uC815\uC9C8\uBB38"
-  - "yes\uB204\uB97C \uC2DC \uC5ED\uD589"
+  - "\uB2F9\uC2E0\uC758 \uB2F5\uBCC0\uC774 \uD1B5\uACC4\uC5D0 \uBC18\uC601\uB418\uC9C0
+    \uC54A\uB294 \uAC83\uC5D0 \uB3D9\uC758\uD558\uC2ED\uB2C8\uAE4C?"

@@ -30,7 +30,7 @@ public class QuestionLoop : IQuestionLoopEffectProvider
   private Question[] questions;
   public Question currentQuestion;
   private QuestionState state;
-  private bool reverse;
+  private bool reversed;
   public bool NoMoreQuestion => currentQuestionIndex >= questionList.clearQuestionCount;
 
   private IScreen screen;
@@ -51,7 +51,7 @@ public class QuestionLoop : IQuestionLoopEffectProvider
     SentenceUIViewer sentenceUIViewer,
     AskText askText)
   {
-    AskingEventRegistry.QuestionLoop = this;
+    AskingEventRegistry.questionLoop = this;
     this.questionList = questionList;
     this.screen = screen;
     this.sentenceUIViewer = sentenceUIViewer;
@@ -63,12 +63,12 @@ public class QuestionLoop : IQuestionLoopEffectProvider
   public void SetNextIndex()
   {
     // 첫번째 질문일 경우도달 시 리버스 상태 해제 및 셔플
-    if (reverse && currentQuestionIndex == 1)
+    if (reversed && currentQuestionIndex == 1)
     {
       SetNewQuestionArray();
-      reverse = false;
+      reversed = false;
     }
-    if (reverse) currentQuestionIndex--;
+    if (reversed) currentQuestionIndex--;
     else currentQuestionIndex++;
   }
   public void SetNewQuestionArray()
@@ -107,7 +107,7 @@ public class QuestionLoop : IQuestionLoopEffectProvider
 
   public void ReverseNext()
   {
-    reverse = true;
+    reversed = true;
     Next();
   }
 

@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9aa56716c26269f40af74758cd641e7c, type: 3}
-  m_Name: n 2
+  m_Name: question27
   m_EditorClassIdentifier: 
   code: 
   requiredQuestionCount: -1
   followingQuestionCode: 
-  fixedIndex: 2
+  fixedIndex: -1
   fixChance: 1
-  isTrap: 0
+  isTrap: 1
   yestText: 
   noText: 
   yesEvent: 5
@@ -25,5 +25,4 @@ MonoBehaviour:
   yesMessage: []
   noMessage: []
   sentence:
-  - "\uB450\uBC88\uC9F8 \uACE0\uC815\uC9C8\uBB38"
-  - "yes\uB204\uB97C \uC2DC \uC5ED\uD589"
+  - "\uC774\uC804 \uC9C8\uBB38\uB4E4\uC5D0 \uBD88\uB9CC\uC774 \uC788\uC73C\uC2ED\uB2C8\uAE4C?"

@@ -20,7 +20,7 @@ public class Monitor : MonoBehaviour, IMonitorEffectProvider
 
     void Awake()
     {
-        AskingEventRegistry.Monitor = this;
+        AskingEventRegistry.monitor = this;
         powerButton.onClick.AddListener(screen.Toggle);
         startButton.onClick.AddListener(GameStart);
         cameraController.onZoomed.AddListener(ActiveRayCaster);

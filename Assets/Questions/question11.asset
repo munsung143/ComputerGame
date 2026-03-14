@@ -10,20 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9aa56716c26269f40af74758cd641e7c, type: 3}
-  m_Name: n 2
+  m_Name: question11
   m_EditorClassIdentifier: 
   code: 
   requiredQuestionCount: -1
   followingQuestionCode: 
-  fixedIndex: 2
+  fixedIndex: -1
   fixChance: 1
   isTrap: 0
-  yestText: 
-  noText: 
-  yesEvent: 5
+  yestText: "\uB450\uCCA0\uC774"
+  noText: "\uC0C1\uCCA0\uC774"
+  yesEvent: 0
   noEvent: 0
   yesMessage: []
   noMessage: []
   sentence:
-  - "\uB450\uBC88\uC9F8 \uACE0\uC815\uC9C8\uBB38"
-  - "yes\uB204\uB97C \uC2DC \uC5ED\uD589"
+  - "\uB450\uCCA0\uC774\uC640 \uC0C1\uCCA0\uC774\uAC00 \uC220\uC744 \uB9C8\uC2DC\uACE0
+    \uC788\uC2B5\uB2C8\uB2E4. \uB450\uCCA0\uC774\uB294 \uC0C1\uCCA0\uC774\uBCF4\uB2E4
+    \uC8FC\uB7C9\uC774 2\uBCD1 \uB354 \uB192\uB2E4\uACE0 \uD560 \uB54C \uB450\uCCA0\uC774\uC640
+    \uC0C1\uCCA0\uC774 \uC911 \uB204\uAC00 \uB354 \uB098\uC774\uAC00 \uB9CE\uC744\uAE4C\uC694?"
