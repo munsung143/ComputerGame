@@ -20,7 +20,7 @@ MonoBehaviour:
   isTrap: 1
   yestText: 
   noText: 
-  yesEvent: 0
+  yesEvent: 3
   noEvent: 2
   yesMessage: []
   noMessage: []

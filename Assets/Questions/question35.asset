@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: question35
   m_EditorClassIdentifier: 
   code: 
-  requiredQuestionCount: -1
+  requiredQuestionCount: 3
   followingQuestionCode: 
   fixedIndex: -1
   fixChance: 1

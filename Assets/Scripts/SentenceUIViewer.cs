@@ -79,7 +79,6 @@ public class SentenceUIViewer : ISentenceUiViewerEffectPrivider
       {
         if (subject == "")
         {
-          i++;
           continue;
         }
         inSharp = !inSharp;
@@ -98,7 +97,6 @@ public class SentenceUIViewer : ISentenceUiViewerEffectPrivider
       }
       if (inSharp) continue;
       result = $"{result}{text[i]}";
-         Debug.Log(result);
     }
 
     if (currentSentenceRoutine != null) CoroutineHelper.Stop(currentSentenceRoutine);

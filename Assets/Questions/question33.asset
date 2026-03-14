@@ -17,7 +17,7 @@ MonoBehaviour:
   followingQuestionCode: 
   fixedIndex: 12
   fixChance: 0.5
-  isTrap: 0
+  isTrap: 1
   yestText: 
   noText: 
   yesEvent: 3
