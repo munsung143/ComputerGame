@@ -15,9 +15,9 @@ MonoBehaviour:
   code: 
   requiredQuestionCount: -1
   followingQuestionCode: 
-  fixedIndex: 15
+  fixedIndex: 12
   fixChance: 0.5
-  isTrap: 1
+  isTrap: 0
   yestText: 
   noText: 
   yesEvent: 3
@@ -25,4 +25,4 @@ MonoBehaviour:
   yesMessage: []
   noMessage: []
   sentence:
-  - "\uC5D4\uB529\uC744 \uC2A4\uD0B5\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
+  - "#\uC5D4\uB529#\uC744 \uC2A4\uD0B5\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"

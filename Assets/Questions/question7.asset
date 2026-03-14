@@ -25,4 +25,4 @@ MonoBehaviour:
   yesMessage: []
   noMessage: []
   sentence:
-  - "\uC624\uB298 \uD558\uB8E8\uB294 \uC88B\uC558\uC2B5\uB2C8\uAE4C?"
+  - "\uC624\uB298 #\uD558\uB8E8#\uB294 \uC88B\uC558\uC2B5\uB2C8\uAE4C?"

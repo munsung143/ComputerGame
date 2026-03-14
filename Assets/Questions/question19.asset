@@ -25,4 +25,4 @@ MonoBehaviour:
   yesMessage: []
   noMessage: []
   sentence:
-  - "\uD604\uC7AC \uC774 \uC870\uC0AC\uC5D0 \uB9CC\uC871 \uD558\uC2ED\uB2C8\uAE4C?"
+  - "\uD604\uC7AC \uC774 #\uC870\uC0AC#\uC5D0 \uB9CC\uC871 \uD558\uC2ED\uB2C8\uAE4C?"

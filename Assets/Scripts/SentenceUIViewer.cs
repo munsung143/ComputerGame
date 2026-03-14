@@ -35,7 +35,7 @@ public class SentenceUIViewer : ISentenceUiViewerEffectPrivider
   public SentenceUIViewer(TextSequence sequence)
   {
     this.sequence = sequence;
-    defaultTextDelayWfs = new WaitForSeconds(0.05f);
+    defaultTextDelayWfs = new WaitForSeconds(0.04f);
     defaultUnderbarDelayWfs = new WaitForSeconds(0.3f);
     AskingEventRegistry.sentenceUiViewer = this;
   }
@@ -72,34 +72,35 @@ public class SentenceUIViewer : ISentenceUiViewerEffectPrivider
   public void PrintTextRaw(string text, string initial)
   {
     string result = "";
-    if (subject == "")
+    bool inSharp = false;
+    for (int i = 0; i < text.Length; i++)
     {
-      result = text;
-    }
-    else
-    {
-      bool sharp = false;
-      for (int i = 0; i < text.Length; i++)
+      if (text[i] == '#')
       {
-        if (text[i] == '#')
+        if (subject == "")
         {
-          sharp = !sharp;
-          if (sharp) result = $"{result}{subject}";
-          else
-          {
-            char p = text[++i];
-            if (p == '은' || p == '는') result.Append(postpositions[0]);
-            else if (p == '이' || p == '가') result.Append(postpositions[1]);
-            else if (p == '을' || p == '를') result.Append(postpositions[2]);
-            else if (p == '와' || p == '과') result.Append(postpositions[3]);
-            else i--;
-          }
+          i++;
           continue;
         }
-        if (sharp) continue;
-        result.Append(text[i]);
+        inSharp = !inSharp;
+        if (inSharp) result = $"{result}{subject}";
+        else
+        {
+          i++;
+          char p = text[i];
+          if (p == '은' || p == '는') result = $"{result}{postpositions[0]}";
+          else if (p == '이' || p == '가') result = $"{result}{postpositions[1]}";
+          else if (p == '을' || p == '를') result = $"{result}{postpositions[2]}";
+          else if (p == '와' || p == '과') result = $"{result}{postpositions[3]}";
+          else i--;
+        }
+        continue;
       }
+      if (inSharp) continue;
+      result = $"{result}{text[i]}";
+         Debug.Log(result);
     }
+
     if (currentSentenceRoutine != null) CoroutineHelper.Stop(currentSentenceRoutine);
     currentSentenceRoutine = CoroutineHelper.Start(sequence.TextRoutine(
     result,

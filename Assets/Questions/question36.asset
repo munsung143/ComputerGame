@@ -26,4 +26,4 @@ MonoBehaviour:
   noMessage:
   - "\uC601\uC5B4\uC880 \uBC30\uC6B0\uACE0 \uC624\uC2ED\uC2DC\uC624"
   sentence:
-  - Is this question in English?
+  - Is this question in #English#?
