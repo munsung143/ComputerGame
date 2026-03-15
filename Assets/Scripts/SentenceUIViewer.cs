@@ -11,7 +11,8 @@ using UnityEngine.UI;
 
 public interface ISentenceUiViewerEffectPrivider
 {
-  public void SetGoldenBall();
+  public void SetGoldenBallSubject();
+  public void ResetSubject();
 }
 public class SentenceUIViewer : ISentenceUiViewerEffectPrivider
 {
@@ -24,7 +25,7 @@ public class SentenceUIViewer : ISentenceUiViewerEffectPrivider
   private string subject = "";
   private string postpositions = "";
 
-  private bool isbinary;
+  private bool isBinary;
 
   public void SetSubject(string subject, string postpositions)
   {
@@ -40,10 +41,20 @@ public class SentenceUIViewer : ISentenceUiViewerEffectPrivider
     AskingEventRegistry.sentenceUiViewer = this;
   }
 
-  public void SetGoldenBall()
+  public void SetBinaryState()
+  {
+    isBinary = true;
+  }
+
+  public void SetGoldenBallSubject()
   {
     subject = "금구슬";
     postpositions = "은이을과";
+  }
+  public void ResetSubject()
+  {
+    subject = "";
+    postpositions = "";
   }
   public void PrintText(string text)
   {
@@ -98,6 +109,8 @@ public class SentenceUIViewer : ISentenceUiViewerEffectPrivider
       if (inSharp) continue;
       result = $"{result}{text[i]}";
     }
+
+
 
     if (currentSentenceRoutine != null) CoroutineHelper.Stop(currentSentenceRoutine);
     currentSentenceRoutine = CoroutineHelper.Start(sequence.TextRoutine(

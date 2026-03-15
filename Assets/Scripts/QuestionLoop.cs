@@ -67,6 +67,7 @@ public class QuestionLoop : IQuestionLoopEffectProvider
     {
       SetNewQuestionArray();
       reversed = false;
+      sentenceUIViewer.ResetSubject();
     }
     if (reversed) currentQuestionIndex--;
     else currentQuestionIndex++;

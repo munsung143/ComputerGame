@@ -10,14 +10,10 @@ public class AskText : MonoBehaviour
     [SerializeField] TextSequence yesSeq;
     [SerializeField] TextSequence sepSeq;
     [SerializeField] TextSequence noSeq;
+
+    [SerializeField] TextButton yesButton;
+    [SerializeField] TextButton noButton;
     [SerializeField] TMP_Text widthTester;
-
-
-    public void ClearYes() => yesSeq.ClearText();
-    public void ClearSep() => sepSeq.ClearText();
-    public void ClearNo() => noSeq.ClearText();
-    public void DisableYes() => yesSeq.DisableButton();
-    public void DisableNo() => noSeq.DisableButton();
 
 
     private string yes;
@@ -26,26 +22,29 @@ public class AskText : MonoBehaviour
     UnityAction currentYesAction;
     UnityAction currentNoAction;
 
+    private WaitForSeconds textDelay;
+
     void Awake()
     {
         ClearAsking();
         DisableAsking();
+        textDelay = new WaitForSeconds(0.05f);
     }
     void Start()
     {
-        yesSeq.AddTextEndListner(() => StartCoroutine(sepSeq.TextRoutine("/", null, null, false)));
-        sepSeq.AddTextEndListner(() => StartCoroutine(noSeq.TextRoutine(this.no, null, null, false)));
+        yesSeq.AddTextEndListner(() => StartCoroutine(sepSeq.TextRoutine("/", textDelay, null, false)));
+        sepSeq.AddTextEndListner(() => StartCoroutine(noSeq.TextRoutine(this.no, textDelay, null, false)));
         noSeq.AddTextEndListner(EnableAsking);
     }
     public void EnableAsking()
     {
-        yesSeq.EnableButton();
-        noSeq.EnableButton();
+        yesButton.EnableButton();
+        noButton.EnableButton();
     }
     public void DisableAsking()
     {
-        yesSeq.DisableButton();
-        noSeq.DisableButton();
+        yesButton.DisableButton();
+        noButton.DisableButton();
     }
     public void ClearAsking()
     {
@@ -61,38 +60,41 @@ public class AskText : MonoBehaviour
         StartCoroutine(ReadAskingRoutine());
     }
 
+
     private IEnumerator ReadAskingRoutine()
     {
         widthTester.text = yes;
         yield return null;
         float width = widthTester.rectTransform.rect.width;
-        yesSeq.SetCorrectPosition(width);
+        RectTransform rectTransform = (RectTransform)yesSeq.transform;
+        Vector3 pos = new Vector3(-1.5f - width, 0, 0);
+        rectTransform.localPosition = pos;
         StartCoroutine(yesSeq.TextRoutine(yes, null, null, false));
     }
     public void AddYesButtonOnceListener(UnityAction action)
     {
         currentYesAction = action;
-        yesSeq.AddButtonListener(YesListener);
+        yesButton.AddButtonListener(YesListener);
     }
     public void AddNoButtonOnceListener(UnityAction action)
     {
         currentNoAction = action;
-        noSeq.AddButtonListener(NoListener);
+        noButton.AddButtonListener(NoListener);
     }
 
-    public void AddYesButtonListener(UnityAction action) => yesSeq.AddButtonListener(action);
-    public void AddNoButtonListener(UnityAction action) => noSeq.AddButtonListener(action);
-    public void RemoveYesButtonListener(UnityAction action) => yesSeq.RemoveButtonListener(action);
-    public void RemoveNoButtonListener(UnityAction action) => noSeq.RemoveButtonListener(action);
+    public void AddYesButtonListener(UnityAction action) => yesButton.AddButtonListener(action);
+    public void AddNoButtonListener(UnityAction action) => noButton.AddButtonListener(action);
+    public void RemoveYesButtonListener(UnityAction action) => yesButton.RemoveButtonListener(action);
+    public void RemoveNoButtonListener(UnityAction action) => noButton.RemoveButtonListener(action);
     private void YesListener()
     {
-        yesSeq.RemoveButtonListener(YesListener);
+        yesButton.RemoveButtonListener(YesListener);
         currentYesAction?.Invoke();
         currentYesAction = null;
     }
     private void NoListener()
     {
-        noSeq.RemoveButtonListener(NoListener);
+        noButton.RemoveButtonListener(NoListener);
         currentNoAction?.Invoke();
         currentNoAction = null;
     }

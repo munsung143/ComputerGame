@@ -17,12 +17,18 @@ public static class AskingEventRegistry
       case AskingEvent.Next: questionLoop.Next(); break;
       case AskingEvent.ForceStop: questionLoop.ForcedStop(); break;
       case AskingEvent.FollowQuestion: questionLoop.Following(); break;
-      case AskingEvent.Reset: questionLoop.Reset(); break;
+      case AskingEvent.Reset: Reset(); break;
       case AskingEvent.Reverse: questionLoop.ReverseNext(); break;
       case AskingEvent.RedScreen: RedScreenEvent(); break;
       case AskingEvent.GoldenBall: GoldenBallEvent(); break;
 
     }
+  }
+
+  private static void Reset()
+  {
+    sentenceUiViewer.ResetSubject();
+    questionLoop.Reset();
   }
 
   private static void RedScreenEvent()
@@ -32,7 +38,7 @@ public static class AskingEventRegistry
   }
   private static void GoldenBallEvent()
   {
-    sentenceUiViewer.SetGoldenBall();
+    sentenceUiViewer.SetGoldenBallSubject();
     questionLoop.Next();
   }
 }

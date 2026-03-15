@@ -1,6 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using TMPro;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -12,44 +16,10 @@ public class TextSequence : MonoBehaviour
     private static int SINGLE_KOREAN_START_AT = 0x3130;
     private static int[] SINGLE_KOREAN_TABLE = { 1, 2, 4, 7, 8, 9, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
     [SerializeField] TMP_Text tmpText;
-    [SerializeField] Button button;
-
-    [SerializeField] float textDelay;
-    [SerializeField] float underbarDelay;
     private UnityEvent onTextEnd;
-    private WaitForSeconds textDelayWfs;
-    private WaitForSeconds underbarDelayWfs;
-
-    public void SetCorrectPosition(float width)
-    {
-        RectTransform rectTransform = (RectTransform)transform;
-        Vector3 pos = new Vector3(-1.5f - width, 0, 0);
-        rectTransform.localPosition = pos;
-    }
-
     void Awake()
     {
         onTextEnd = new UnityEvent();
-        textDelayWfs = new WaitForSeconds(textDelay);
-        underbarDelayWfs = new WaitForSeconds(underbarDelay);
-    }
-    public void EnableButton()
-    {
-        if (button != null) button.enabled = true;
-    }
-    public void DisableButton()
-    {
-        if (button != null) button.enabled = false;
-    }
-    public void AddButtonListener(UnityAction action)
-    {
-        if (button == null) return;
-        button.onClick.AddListener(action);
-    }
-    public void RemoveButtonListener(UnityAction action)
-    {
-        if (button == null) return;
-        button.onClick.RemoveListener(action);
     }
     public void AddTextEndListner(UnityAction action)
     {
@@ -63,15 +33,79 @@ public class TextSequence : MonoBehaviour
     {
         tmpText.text = "";
     }
+    public void SetFontSize(float size)
+    {
+        tmpText.fontSize = size;
+    }
+    public void SetColor(Color color)
+    {
+        tmpText.color = color;
+    }
 
-    public IEnumerator TextRoutine(string input, WaitForSeconds delay, WaitForSeconds underbarDelay, bool useUnderbar = true, string initial = "")
+    public string GetBinaryText(string text)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < text.Length; i++)
+        {
+            for (int shift = (int)Math.Log(text[i], 2); shift >= 0; shift--)
+            {
+                sb.Append((text[i] >> shift) & 1);
+            }
+        }
+        return sb.ToString();
+    }
+
+
+
+    public string GetSpecificSubjectedText(string text, string subject, string postpositions)
+    {
+        string result = "";
+        bool inSharp = false;
+        for (int i = 0; i < text.Length; i++)
+        {
+            if (text[i] == '#')
+            {
+                if (subject == "")
+                {
+                    continue;
+                }
+                inSharp = !inSharp;
+                if (inSharp) result = $"{result}{subject}";
+                else
+                {
+                    i++;
+                    char p = text[i];
+                    if (p == '은' || p == '는') result = $"{result}{postpositions[0]}";
+                    else if (p == '이' || p == '가') result = $"{result}{postpositions[1]}";
+                    else if (p == '을' || p == '를') result = $"{result}{postpositions[2]}";
+                    else if (p == '와' || p == '과') result = $"{result}{postpositions[3]}";
+                    else i--;
+                }
+                continue;
+            }
+            if (inSharp) continue;
+            result = $"{result}{text[i]}";
+        }
+        return result;
+    }
+    public IEnumerator TextRoutine(string input, WaitForSeconds delay)
+    {
+        return TextRoutine(input, delay, "", null);
+    }
+    public IEnumerator TextRoutine(string input, WaitForSeconds delay, string initial)
+    {
+        return TextRoutine(input, delay, initial, null);
+    }
+    public IEnumerator TextRoutine(
+    string input,
+    WaitForSeconds delay,
+    string initial,
+    WaitForSeconds underbarDelay)
     {
         // char는 해당 문자의 유니코드 값만을 저장한다.
         // UTF-8 인코딩 방식으로 저장하지 않는다.
         // 한글 문자 형성 공식 {(초성×28x21)+(중성×28)+종성}+44032 
         // (종성 0~27, 중성 0~20)
-        if (delay == null) delay = textDelayWfs;
-        if (underbarDelay == null) underbarDelay = underbarDelayWfs;
         string resultText = initial;
         tmpText.text = resultText;
         foreach (char c in input)
@@ -114,6 +148,7 @@ public class TextSequence : MonoBehaviour
         }
         onTextEnd?.Invoke();
         bool underlined = false;
+        bool useUnderbar = underbarDelay != null;
         while (useUnderbar)
         {
             yield return underbarDelay;
