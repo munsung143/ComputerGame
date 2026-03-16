@@ -18,8 +18,8 @@ MonoBehaviour:
   fixedIndex: -1
   fixChance: 1
   isTrap: 0
-  yestText: "\uBE68\uAC04\uC0C9"
-  noText: "\uD30C\uB780\uC0C9"
+  yestText: "#\uBE68\uAC04\uC0C9#"
+  noText: "#\uD30C\uB780\uC0C9#"
   yesEvent: 0
   noEvent: 0
   yesMessage: []

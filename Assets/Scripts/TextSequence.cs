@@ -17,9 +17,12 @@ public class TextSequence : MonoBehaviour
     private static int[] SINGLE_KOREAN_TABLE = { 1, 2, 4, 7, 8, 9, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
     [SerializeField] TMP_Text tmpText;
     private UnityEvent onTextEnd;
+
+    private float initialFontSize;
     void Awake()
     {
         onTextEnd = new UnityEvent();
+        initialFontSize = tmpText.fontSize;
     }
     public void AddTextEndListner(UnityAction action)
     {
@@ -36,6 +39,10 @@ public class TextSequence : MonoBehaviour
     public void SetFontSize(float size)
     {
         tmpText.fontSize = size;
+    }
+    public void ResetFontSize()
+    {
+        tmpText.fontSize = initialFontSize;
     }
     public void SetColor(Color color)
     {
@@ -59,7 +66,7 @@ public class TextSequence : MonoBehaviour
 
     public string GetSpecificSubjectedText(string text, string subject, string postpositions)
     {
-        string result = "";
+        StringBuilder sb = new StringBuilder();
         bool inSharp = false;
         for (int i = 0; i < text.Length; i++)
         {
@@ -70,23 +77,24 @@ public class TextSequence : MonoBehaviour
                     continue;
                 }
                 inSharp = !inSharp;
-                if (inSharp) result = $"{result}{subject}";
+                if (inSharp) sb.Append(subject);
                 else
                 {
                     i++;
+                    if (i >= text.Length) break;
                     char p = text[i];
-                    if (p == '은' || p == '는') result = $"{result}{postpositions[0]}";
-                    else if (p == '이' || p == '가') result = $"{result}{postpositions[1]}";
-                    else if (p == '을' || p == '를') result = $"{result}{postpositions[2]}";
-                    else if (p == '와' || p == '과') result = $"{result}{postpositions[3]}";
+                    if (p == '은' || p == '는') sb.Append(postpositions[0]);
+                    else if (p == '이' || p == '가') sb.Append(postpositions[1]);
+                    else if (p == '을' || p == '를') sb.Append(postpositions[2]);
+                    else if (p == '와' || p == '과') sb.Append(postpositions[3]);
                     else i--;
                 }
                 continue;
             }
             if (inSharp) continue;
-            result = $"{result}{text[i]}";
+            sb.Append(text[i]);
         }
-        return result;
+        return sb.ToString();
     }
     public IEnumerator TextRoutine(string input, WaitForSeconds delay)
     {

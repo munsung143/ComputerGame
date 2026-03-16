@@ -7,7 +7,7 @@ public static class Util
   [UnityEditor.MenuItem("Utilities/Generate TextQuestion Assets")]
   public static void GetnerateTextQuestionAsset()
   {
-    string[] allLines = File.ReadAllLines(Application.dataPath + "/CSV/TextQuestion.csv");
+    string[] allLines = File.ReadAllLines(Application.dataPath + "/CSV/textQuestions - Sheet1.csv");
     for (int i = 1; i < allLines.Length; i++)
     {
       TextQuestion so = ScriptableObject.CreateInstance<TextQuestion>();

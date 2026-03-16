@@ -304,6 +304,8 @@ MonoBehaviour:
   yesSeq: {fileID: 796327418}
   sepSeq: {fileID: 1272793836}
   noSeq: {fileID: 1266249375}
+  yesButton: {fileID: 796327420}
+  noButton: {fileID: 1266249377}
   widthTester: {fileID: 1543373159}
 --- !u!1 &274181945
 GameObject:
@@ -596,9 +598,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tmpText: {fileID: 386554537}
-  button: {fileID: 0}
-  textDelay: 0
-  underbarDelay: 0
 --- !u!114 &386554537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1387,9 +1386,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tmpText: {fileID: 650315122}
-  button: {fileID: 0}
-  textDelay: 0
-  underbarDelay: 0
 --- !u!1 &780646293
 GameObject:
   m_ObjectHideFlags: 0
@@ -1476,6 +1472,7 @@ GameObject:
   - component: {fileID: 796327417}
   - component: {fileID: 796327418}
   - component: {fileID: 796327419}
+  - component: {fileID: 796327420}
   m_Layer: 0
   m_Name: Yes
   m_TagString: Untagged
@@ -1626,9 +1623,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tmpText: {fileID: 796327415}
-  button: {fileID: 796327419}
-  textDelay: 0.05
-  underbarDelay: 0.3
 --- !u!114 &796327419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1673,6 +1667,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &796327420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796327413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eef3e083544f8e34690a12c9b646ea68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 796327419}
 --- !u!1 &1045063770
 GameObject:
   m_ObjectHideFlags: 0
@@ -2112,6 +2119,7 @@ GameObject:
   - component: {fileID: 1266249372}
   - component: {fileID: 1266249375}
   - component: {fileID: 1266249376}
+  - component: {fileID: 1266249377}
   m_Layer: 0
   m_Name: No
   m_TagString: Untagged
@@ -2262,9 +2270,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tmpText: {fileID: 1266249373}
-  button: {fileID: 1266249376}
-  textDelay: 0.05
-  underbarDelay: 0.3
 --- !u!114 &1266249376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2309,6 +2314,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1266249377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1266249370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eef3e083544f8e34690a12c9b646ea68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 1266249376}
 --- !u!1 &1270348476
 GameObject:
   m_ObjectHideFlags: 0
@@ -2594,9 +2612,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tmpText: {fileID: 1272793833}
-  button: {fileID: 0}
-  textDelay: 0.05
-  underbarDelay: 0.3
 --- !u!1 &1515394634
 GameObject:
   m_ObjectHideFlags: 0

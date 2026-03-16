@@ -7,7 +7,9 @@ public static class AskingEventRegistry
   public static IRedScreenEffectProvider redScreen;
   public static IMonitorEffectProvider monitor;
   public static IQuestionLoopEffectProvider questionLoop;
-  public static ISentenceUiViewerEffectPrivider sentenceUiViewer;
+  public static ITextEffectPrivider sentenceUiViewer;
+
+  public static ITextEffectPrivider askText;
 
 
   public static void PlayEvent(AskingEvent type)
@@ -21,13 +23,20 @@ public static class AskingEventRegistry
       case AskingEvent.Reverse: questionLoop.ReverseNext(); break;
       case AskingEvent.RedScreen: RedScreenEvent(); break;
       case AskingEvent.GoldenBall: GoldenBallEvent(); break;
-
+      case AskingEvent.Binary: Binary(); break;
     }
   }
 
   private static void Reset()
   {
+    sentenceUiViewer.ResetBinaryState();
+    askText.ResetBinaryState();
+    askText.ResetSubject();
+    askText.ResetFontSize();
+    askText.ResetBinaryState();
     sentenceUiViewer.ResetSubject();
+    sentenceUiViewer.ResetFontSize();
+    sentenceUiViewer.ResetTextDelay();
     questionLoop.Reset();
   }
 
@@ -39,6 +48,16 @@ public static class AskingEventRegistry
   private static void GoldenBallEvent()
   {
     sentenceUiViewer.SetGoldenBallSubject();
+    askText.SetGoldenBallSubject();
+    questionLoop.Next();
+  }
+  private static void Binary()
+  {
+    sentenceUiViewer.SetBinaryState();
+    askText.SetBinaryState();
+    sentenceUiViewer.SetFontSize(0.7f);
+    askText.SetFontSize(1);
+    sentenceUiViewer.SetTextDelay(0.01f);
     questionLoop.Next();
   }
 }
@@ -51,5 +70,6 @@ public enum AskingEvent
   Reset,
   RedScreen,
   Reverse,
-  GoldenBall
+  GoldenBall,
+  Binary
 }

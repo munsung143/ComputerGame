@@ -9,18 +9,26 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 
-public interface ISentenceUiViewerEffectPrivider
+public interface ITextEffectPrivider
 {
   public void SetGoldenBallSubject();
   public void ResetSubject();
+  public void SetBinaryState();
+  public void ResetBinaryState();
+  public void SetFontSize(float size);
+  public void SetTextDelay(float delay);
+  public void ResetFontSize();
+  public void ResetTextDelay();
 }
-public class SentenceUIViewer : ISentenceUiViewerEffectPrivider
+public class SentenceUIViewer : ITextEffectPrivider
 {
   private TextSequence sequence;
 
   private Coroutine currentSentenceRoutine;
-  private WaitForSeconds defaultTextDelayWfs;
-  private WaitForSeconds defaultUnderbarDelayWfs;
+  private WaitForSeconds initialTextDelay;
+  private WaitForSeconds initialUnderbarDelay;
+
+  private WaitForSeconds currentTextDelay;
 
   private string subject = "";
   private string postpositions = "";
@@ -36,14 +44,25 @@ public class SentenceUIViewer : ISentenceUiViewerEffectPrivider
   public SentenceUIViewer(TextSequence sequence)
   {
     this.sequence = sequence;
-    defaultTextDelayWfs = new WaitForSeconds(0.04f);
-    defaultUnderbarDelayWfs = new WaitForSeconds(0.3f);
+    initialTextDelay = new WaitForSeconds(0.03f);
+    initialUnderbarDelay = new WaitForSeconds(0.3f);
+    currentTextDelay = initialTextDelay;
     AskingEventRegistry.sentenceUiViewer = this;
   }
+  public void SetFontSize(float size) => sequence.SetFontSize(size);
+  public void SetTextDelay(float delay) => currentTextDelay = new WaitForSeconds(delay);
+
+  public void ResetFontSize() => sequence.ResetFontSize();
+  public void ResetTextDelay() => currentTextDelay = initialTextDelay;
+
 
   public void SetBinaryState()
   {
     isBinary = true;
+  }
+  public void ResetBinaryState()
+  {
+    isBinary = false;
   }
 
   public void SetGoldenBallSubject()
@@ -82,43 +101,14 @@ public class SentenceUIViewer : ISentenceUiViewerEffectPrivider
 
   public void PrintTextRaw(string text, string initial)
   {
-    string result = "";
-    bool inSharp = false;
-    for (int i = 0; i < text.Length; i++)
-    {
-      if (text[i] == '#')
-      {
-        if (subject == "")
-        {
-          continue;
-        }
-        inSharp = !inSharp;
-        if (inSharp) result = $"{result}{subject}";
-        else
-        {
-          i++;
-          char p = text[i];
-          if (p == '은' || p == '는') result = $"{result}{postpositions[0]}";
-          else if (p == '이' || p == '가') result = $"{result}{postpositions[1]}";
-          else if (p == '을' || p == '를') result = $"{result}{postpositions[2]}";
-          else if (p == '와' || p == '과') result = $"{result}{postpositions[3]}";
-          else i--;
-        }
-        continue;
-      }
-      if (inSharp) continue;
-      result = $"{result}{text[i]}";
-    }
-
-
-
+    text = sequence.GetSpecificSubjectedText(text, subject, postpositions);
+    if (isBinary) text = sequence.GetBinaryText(text);
     if (currentSentenceRoutine != null) CoroutineHelper.Stop(currentSentenceRoutine);
     currentSentenceRoutine = CoroutineHelper.Start(sequence.TextRoutine(
-    result,
-    defaultTextDelayWfs,
-    defaultUnderbarDelayWfs,
-    true,
-    initial));
+    text,
+    currentTextDelay,
+    initial,
+    initialUnderbarDelay));
   }
 
   public void AddSentenceEndListener(UnityAction action)

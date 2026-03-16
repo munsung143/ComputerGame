@@ -5,7 +5,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class AskText : MonoBehaviour
+
+public class AskText : MonoBehaviour, ITextEffectPrivider
 {
     [SerializeField] TextSequence yesSeq;
     [SerializeField] TextSequence sepSeq;
@@ -19,23 +20,68 @@ public class AskText : MonoBehaviour
     private string yes;
     private string no;
 
+    private bool isBinary;
+    private string subject;
+    private string postpositions;
+
     UnityAction currentYesAction;
     UnityAction currentNoAction;
 
-    private WaitForSeconds textDelay;
+    private WaitForSeconds initialTextDelay;
+    private WaitForSeconds currentTextDelay;
 
     void Awake()
     {
         ClearAsking();
         DisableAsking();
-        textDelay = new WaitForSeconds(0.05f);
+        initialTextDelay = new WaitForSeconds(0.05f);
+        AskingEventRegistry.askText = this;
     }
     void Start()
     {
-        yesSeq.AddTextEndListner(() => StartCoroutine(sepSeq.TextRoutine("/", textDelay, null, false)));
-        sepSeq.AddTextEndListner(() => StartCoroutine(noSeq.TextRoutine(this.no, textDelay, null, false)));
+        yesSeq.AddTextEndListner(() => StartCoroutine(sepSeq.TextRoutine("/", initialTextDelay)));
+        sepSeq.AddTextEndListner(() => StartCoroutine(noSeq.TextRoutine(this.no, initialTextDelay)));
         noSeq.AddTextEndListner(EnableAsking);
     }
+
+    public void SetBinaryState()
+    {
+        isBinary = true;
+    }
+    public void ResetBinaryState()
+    {
+        isBinary = false;
+    }
+
+    public void SetGoldenBallSubject()
+    {
+        subject = "금구슬";
+        postpositions = "은이을과";
+    }
+    public void ResetSubject()
+    {
+        subject = "";
+        postpositions = "";
+    }
+
+    public void SetFontSize(float size)
+    {
+        yesSeq.SetFontSize(size);
+        sepSeq.SetFontSize(size);
+        noSeq.SetFontSize(size);
+        widthTester.fontSize = size;
+
+    }
+    public void SetTextDelay(float delay) => currentTextDelay = new WaitForSeconds(delay);
+
+    public void ResetFontSize()
+    {
+        yesSeq.ResetFontSize();
+        sepSeq.ResetFontSize();
+        noSeq.ResetFontSize();
+        widthTester.fontSize = 2;
+    }
+    public void ResetTextDelay() => currentTextDelay = initialTextDelay;
     public void EnableAsking()
     {
         yesButton.EnableButton();
@@ -55,6 +101,13 @@ public class AskText : MonoBehaviour
 
     public void ReadAsking(string yes, string no)
     {
+        yes = yesSeq.GetSpecificSubjectedText(yes, subject, postpositions);
+        no = yesSeq.GetSpecificSubjectedText(no, subject, postpositions);
+        if (isBinary)
+        {
+            yes = yesSeq.GetBinaryText(yes);
+            no = yesSeq.GetBinaryText(no);
+        }
         this.yes = yes;
         this.no = no;
         StartCoroutine(ReadAskingRoutine());
@@ -69,7 +122,7 @@ public class AskText : MonoBehaviour
         RectTransform rectTransform = (RectTransform)yesSeq.transform;
         Vector3 pos = new Vector3(-1.5f - width, 0, 0);
         rectTransform.localPosition = pos;
-        StartCoroutine(yesSeq.TextRoutine(yes, null, null, false));
+        StartCoroutine(yesSeq.TextRoutine(yes, initialTextDelay));
     }
     public void AddYesButtonOnceListener(UnityAction action)
     {
