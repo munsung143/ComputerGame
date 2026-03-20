@@ -6,20 +6,18 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class TextSequence : MonoBehaviour
+public class TextSequence
 {
 
     private static int COMPOSITE_KOREAN_START_AT = 0xAC00;
     private static int SINGLE_KOREAN_START_AT = 0x3130;
     private static int[] SINGLE_KOREAN_TABLE = { 1, 2, 4, 7, 8, 9, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
-    [SerializeField] TMP_Text tmpText;
     private UnityEvent onTextEnd;
-
-    private float initialFontSize;
-    void Awake()
+    private TextEditor editor;
+    public TextSequence(TextEditor editor)
     {
         onTextEnd = new UnityEvent();
-        initialFontSize = tmpText.fontSize;
+        this.editor = editor;
     }
     public void AddTextEndListner(UnityAction action)
     {
@@ -28,22 +26,6 @@ public class TextSequence : MonoBehaviour
     public void RemoveTextEndListener(UnityAction action)
     {
         onTextEnd.RemoveListener(action);
-    }
-    public void ClearText()
-    {
-        tmpText.text = "";
-    }
-    public void SetFontSize(float size)
-    {
-        tmpText.fontSize = size;
-    }
-    public void ResetFontSize()
-    {
-        tmpText.fontSize = initialFontSize;
-    }
-    public void SetColor(Color color)
-    {
-        tmpText.color = color;
     }
 
     public string GetBinaryText(string text)
@@ -55,12 +37,10 @@ public class TextSequence : MonoBehaviour
             {
                 sb.Append((text[i] >> shift) & 1);
             }
+            sb.Append(' ');
         }
         return sb.ToString();
     }
-
-
-
     public string GetSpecificSubjectedText(string text, string subject, string postpositions)
     {
         StringBuilder sb = new StringBuilder();
@@ -111,8 +91,8 @@ public class TextSequence : MonoBehaviour
         // UTF-8 인코딩 방식으로 저장하지 않는다.
         // 한글 문자 형성 공식 {(초성×28x21)+(중성×28)+종성}+44032 
         // (종성 0~27, 중성 0~20)
-        string resultText = initial;
-        tmpText.text = resultText;
+        StringBuilder result = new StringBuilder(initial);
+        editor.SetText(result.ToString());
         foreach (char c in input)
         {
             yield return delay;
@@ -126,29 +106,29 @@ public class TextSequence : MonoBehaviour
                 int first = composite;
 
                 char letter = (char)(SINGLE_KOREAN_TABLE[first] + SINGLE_KOREAN_START_AT);
-                resultText = $"{resultText}{letter}";
-                tmpText.text = resultText;
+                result.Append(letter);
+                editor.SetText(result.ToString());
 
                 yield return delay;
-                resultText = resultText.Remove(resultText.Length - 1);
                 first = first * 21 * 28;
                 letter = (char)(first + middle + COMPOSITE_KOREAN_START_AT);
-                resultText = $"{resultText}{letter}";
-                tmpText.text = resultText;
+                result.Remove(result.Length - 1, 1);
+                result.Append(letter);
+                editor.SetText(result.ToString());
 
                 if (last != 0)
                 {
                     yield return delay;
-                    resultText = resultText.Remove(resultText.Length - 1);
                     letter = (char)(first + middle + last + COMPOSITE_KOREAN_START_AT);
-                    resultText = $"{resultText}{letter}";
-                    tmpText.text = resultText;
+                    result.Remove(result.Length - 1, 1);
+                    result.Append(letter);
+                    editor.SetText(result.ToString());
                 }
             }
             else
             {
-                resultText = $"{resultText}{c}";
-                tmpText.text = resultText;
+                result.Append(c);
+                editor.SetText(result.ToString());
             }
         }
         onTextEnd?.Invoke();
@@ -159,14 +139,14 @@ public class TextSequence : MonoBehaviour
             yield return underbarDelay;
             if (underlined)
             {
-                resultText = resultText.Remove(resultText.Length - 2);
+                result.Remove(result.Length - 2, 2);
             }
             else
             {
-                resultText = $"{resultText} _";
+                result.Append(" _");
             }
             underlined = !underlined;
-            tmpText.text = resultText;
+            editor.SetText(result.ToString());
         }
     }
 }

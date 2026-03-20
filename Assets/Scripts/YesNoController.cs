@@ -13,9 +13,9 @@ public class YesNoController
   public string CurrentNo => currentYesNo.NoText == "" ? "NO" : currentYesNo.NoText;
   public AskText askText;
   public AskingEvent currentEvent;
-  private SentenceUIViewer sentenceUIViewer;
+  private SentenceSequenceViewer sentenceUIViewer;
   private IYesNoState stateController;
-  public YesNoController(IYesNO yesNO, IYesNoState stateController, AskText askText, SentenceUIViewer sentenceUIViewer)
+  public YesNoController(IYesNO yesNO, IYesNoState stateController, AskText askText, SentenceSequenceViewer sentenceUIViewer)
   {
     currentYesNo = yesNO;
     this.stateController = stateController;

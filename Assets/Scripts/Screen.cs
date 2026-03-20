@@ -18,7 +18,10 @@ public class Screen : MonoBehaviour, IScreen
     // 제공
     private QuestionLoop loop;
     [SerializeField] TextSequence sentenceSeq;
+
+    [SerializeField] Sentence sentence;
     [SerializeField] AskText ask;
+    [SerializeField] Morse morse;
     [SerializeField] QuestionList questionList;
     [SerializeField] Button nextButton;
 
@@ -35,8 +38,9 @@ public class Screen : MonoBehaviour, IScreen
         loop = new QuestionLoop(
             questionList,
             this,
-            new SentenceUIViewer(sentenceSeq),
-            ask);
+            new SentenceSequenceViewer(sentenceSeq),
+            ask,
+            morse);
         Off();
         onScreenOn.AddListener(ReadQustionListener);
         AskingEventRegistry.redScreen = redScreen;

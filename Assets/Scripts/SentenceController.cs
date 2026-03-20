@@ -6,9 +6,9 @@ public class SentenceController
   public string CurrentSentence => sentences[currentSentenceIndex];
   public bool IsLastSentence => currentSentenceIndex == sentences.Length - 1;
   private ISentenceState stateController;
-  private SentenceUIViewer sentenceUIViewer;
+  private SentenceSequenceViewer sentenceUIViewer;
 
-  public SentenceController(ISentencePrintable sentencePrintable, ISentenceState stateController, SentenceUIViewer sentenceUIViewer)
+  public SentenceController(ISentencePrintable sentencePrintable, ISentenceState stateController, SentenceSequenceViewer sentenceUIViewer)
   {
     currentSentencePrintable = sentencePrintable;
     this.stateController = stateController;

@@ -105,7 +105,7 @@ public class QuestionList : ScriptableObject
                 i++;
                 continue;
             }
-            if (selected[j].requiredQuestionCount != -1 && selected[j].requiredQuestionCount <= i)
+            if (selected[j].requiredQuestionCount != -1 && selected[j].requiredQuestionCount >= i)
             {
                 List<int> temp = new();
                 for (int k = selected[j].requiredQuestionCount + 1; k < selectedQuestions.Length; k++)

@@ -8,6 +8,8 @@ public class CursorController : MonoBehaviour
     float halfWidth;
     float halfHelght;
     bool screenOn;
+
+    bool reverse;
     void Awake()
     {
         cam = Camera.main;
@@ -17,15 +19,19 @@ public class CursorController : MonoBehaviour
         if (screen == null) return;
         Vector3 input = Input.mousePosition;
         input.z = cameraDepth;
-        Vector3 s2w = cam.ScreenToWorldPoint(input);
-        Vector3 i = screen.InverseTransformPoint(s2w);
+        Vector3 i = screen.InverseTransformPoint(cam.ScreenToWorldPoint(input));
         if (i.x > halfWidth || i.x < -halfWidth || i.y > halfHelght || i.y < -halfHelght || !screenOn)
         {
             Cursor.visible = true;
             return;
         }
         Cursor.visible = false;
-        transform.position = s2w;
+        if (reverse)
+        {
+            i.x = -i.x;
+            i.y = -i.y;
+        }
+        transform.localPosition = i;
 
     }
     public void SetValues(RectTransform trs, float depth)

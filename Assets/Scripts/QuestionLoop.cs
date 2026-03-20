@@ -23,8 +23,9 @@ public enum QuestionState
 }
 public class QuestionLoop : IQuestionLoopEffectProvider
 {
-  private SentenceUIViewer sentenceUIViewer;
+  private SentenceSequenceViewer sentenceUIViewer;
   private AskText askText;
+  private Morse morse;
   private QuestionList questionList;
   private int currentQuestionIndex;
   private Question[] questions;
@@ -43,19 +44,29 @@ public class QuestionLoop : IQuestionLoopEffectProvider
       else return null;
     }
   }
+  public MorseQuestion CurrentMorseQuestion
+  {
+    get
+    {
+      if (currentQuestion is MorseQuestion i) return i;
+      else return null;
+    }
+  }
   public IQuestionReadable questionReadable;
 
   public QuestionLoop(
     QuestionList questionList,
     IScreen screen,
-    SentenceUIViewer sentenceUIViewer,
-    AskText askText)
+    SentenceSequenceViewer sentenceUIViewer,
+    AskText askText,
+    Morse morse)
   {
     AskingEventRegistry.questionLoop = this;
     this.questionList = questionList;
     this.screen = screen;
     this.sentenceUIViewer = sentenceUIViewer;
     this.askText = askText;
+    this.morse = morse;
     SetNewQuestionArray();
     currentQuestion = questions[currentQuestionIndex];
   }
@@ -87,9 +98,18 @@ public class QuestionLoop : IQuestionLoopEffectProvider
         sentenceUIViewer,
         CurrentTextQuestion,
         currentQuestionIndex);
-      screen.AddNextButtonListener(questionReadable.ReadQuestion);
       questionReadable.ReadQuestion();
     }
+    else if (CurrentMorseQuestion != null)
+    {
+      questionReadable = new MorseQuestionController(
+        morse,
+        CurrentMorseQuestion,
+        sentenceUIViewer,
+        askText);
+      questionReadable.ReadQuestion();
+    }
+    screen.AddNextButtonListener(questionReadable.ReadQuestion);
   }
 
   private void ResetNextButtonListener()

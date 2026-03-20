@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering.LookDev;
 using UnityEngine.UI;
 
 
@@ -20,19 +21,16 @@ public interface ITextEffectPrivider
   public void ResetFontSize();
   public void ResetTextDelay();
 }
-public class SentenceUIViewer : ITextEffectPrivider
+public class SentenceSequenceViewer : ITextEffectPrivider
 {
   private TextSequence sequence;
-
   private Coroutine currentSentenceRoutine;
   private WaitForSeconds initialTextDelay;
   private WaitForSeconds initialUnderbarDelay;
-
   private WaitForSeconds currentTextDelay;
 
   private string subject = "";
   private string postpositions = "";
-
   private bool isBinary;
 
   public void SetSubject(string subject, string postpositions)
@@ -41,7 +39,7 @@ public class SentenceUIViewer : ITextEffectPrivider
     this.postpositions = postpositions;
   }
 
-  public SentenceUIViewer(TextSequence sequence)
+  public SentenceSequenceViewer(TextSequence sequence)
   {
     this.sequence = sequence;
     initialTextDelay = new WaitForSeconds(0.03f);
@@ -75,25 +73,34 @@ public class SentenceUIViewer : ITextEffectPrivider
     subject = "";
     postpositions = "";
   }
+  private string GetTextFormat(string text)
+  {
+    text = sequence.GetSpecificSubjectedText(text, subject, postpositions);
+    if (isBinary) text = sequence.GetBinaryText(text);
+    return text;
+  }
   public void PrintText(string text)
   {
+    text = GetTextFormat(text);
     PrintTextRaw(text, "");
   }
   public void PrintTextWithIndex(string text, int index)
   {
+    text = GetTextFormat(text);
     if (index == 0)
     {
-      PrintText(text);
+      PrintTextRaw(text, "");
       return;
     }
-    PrintText($"{index}. {text}");
+    PrintTextRaw($"{index}. {text}", "");
   }
 
   public void PrintTextWithInitialIndex(string text, int index)
   {
+    text = GetTextFormat(text);
     if (index == 0)
     {
-      PrintText(text);
+      PrintTextRaw(text, "");
       return;
     }
     PrintTextRaw(text, $"{index}. ");
@@ -101,8 +108,6 @@ public class SentenceUIViewer : ITextEffectPrivider
 
   public void PrintTextRaw(string text, string initial)
   {
-    text = sequence.GetSpecificSubjectedText(text, subject, postpositions);
-    if (isBinary) text = sequence.GetBinaryText(text);
     if (currentSentenceRoutine != null) CoroutineHelper.Stop(currentSentenceRoutine);
     currentSentenceRoutine = CoroutineHelper.Start(sequence.TextRoutine(
     text,

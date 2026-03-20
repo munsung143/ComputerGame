@@ -21,8 +21,8 @@ public class AskText : MonoBehaviour, ITextEffectPrivider
     private string no;
 
     private bool isBinary;
-    private string subject;
-    private string postpositions;
+    private string subject = "";
+    private string postpositions = "";
 
     UnityAction currentYesAction;
     UnityAction currentNoAction;
@@ -32,13 +32,13 @@ public class AskText : MonoBehaviour, ITextEffectPrivider
 
     void Awake()
     {
-        ClearAsking();
-        DisableAsking();
         initialTextDelay = new WaitForSeconds(0.05f);
         AskingEventRegistry.askText = this;
     }
     void Start()
     {
+        ClearAsking();
+        DisableAsking();
         yesSeq.AddTextEndListner(() => StartCoroutine(sepSeq.TextRoutine("/", initialTextDelay)));
         sepSeq.AddTextEndListner(() => StartCoroutine(noSeq.TextRoutine(this.no, initialTextDelay)));
         noSeq.AddTextEndListner(EnableAsking);

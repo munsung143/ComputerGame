@@ -9,7 +9,7 @@ public interface IMonitorEffectProvider
     public void RemovePowerButtonListener();
 }
 
-public class Monitor : MonoBehaviour, IMonitorEffectProvider
+public class MonitorController : MonoBehaviour, IMonitorEffectProvider
 {
     [SerializeField] private GraphicRaycaster raycaster;
     [SerializeField] private Button powerButton;

@@ -14,7 +14,7 @@ public class TextQuestionController : IQuestionReadable
 {
 
   private AskText askText;
-  private SentenceUIViewer sentenceUIViewer;
+  private SentenceSequenceViewer sentenceUIViewer;
   private TextQuestion currentQuestion;
 
   private SentenceController sentenceController;
@@ -24,7 +24,7 @@ public class TextQuestionController : IQuestionReadable
   private int index;
   public TextQuestionController(
     AskText askText,
-    SentenceUIViewer sentenceUIViewer,
+    SentenceSequenceViewer sentenceUIViewer,
     TextQuestion textQuestion,
     int index)
   {
@@ -43,6 +43,7 @@ public class TextQuestionController : IQuestionReadable
   }
   private void HideAsk()
   {
+    Debug.Log("질문 숨김");
     askText.ClearAsking();
     askText.DisableAsking();
   }

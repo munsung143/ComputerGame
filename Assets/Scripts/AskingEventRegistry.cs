@@ -24,6 +24,7 @@ public static class AskingEventRegistry
       case AskingEvent.RedScreen: RedScreenEvent(); break;
       case AskingEvent.GoldenBall: GoldenBallEvent(); break;
       case AskingEvent.Binary: Binary(); break;
+      case AskingEvent.HalfReset: HalfReset(); break;
     }
   }
 
@@ -60,6 +61,18 @@ public static class AskingEventRegistry
     sentenceUiViewer.SetTextDelay(0.01f);
     questionLoop.Next();
   }
+  private static void HalfReset()
+  {
+    float r = Random.Range(0, 2);
+    if (r == 0)
+    {
+      Reset();
+    }
+    else
+    {
+      questionLoop.Next();
+    }
+  }
 }
 
 public enum AskingEvent
@@ -71,5 +84,6 @@ public enum AskingEvent
   RedScreen,
   Reverse,
   GoldenBall,
-  Binary
+  Binary,
+  HalfReset
 }
