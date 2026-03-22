@@ -14,7 +14,7 @@ public class TextQuestionController : IQuestionReadable
 {
 
   private AskText askText;
-  private SentenceSequenceViewer sentenceUIViewer;
+  private Sentence sentence;
   private TextQuestion currentQuestion;
 
   private SentenceController sentenceController;
@@ -24,20 +24,20 @@ public class TextQuestionController : IQuestionReadable
   private int index;
   public TextQuestionController(
     AskText askText,
-    SentenceSequenceViewer sentenceUIViewer,
+    Sentence sentence,
     TextQuestion textQuestion,
     int index)
   {
     this.askText = askText;
-    this.sentenceUIViewer = sentenceUIViewer;
+    this.sentence = sentence;
     this.index = index;
     currentQuestion = textQuestion;
     stateController = new TextQuestionStateController();
 
-    sentenceController = new SentenceController(currentQuestion, stateController, sentenceUIViewer);
-    yesNoController = new YesNoController(currentQuestion, stateController, askText, sentenceUIViewer);
+    sentenceController = new SentenceController(currentQuestion, stateController, sentence);
+    yesNoController = new YesNoController(currentQuestion, stateController, askText, sentence);
 
-    sentenceUIViewer.AddSentenceEndListener(OnSentenceEnd);
+    sentence.AddSentenceEndListener(OnSentenceEnd);
     askText.AddYesButtonListener(OnYesClicked);
     askText.AddNoButtonListener(OnNoClicked);
   }
@@ -80,7 +80,7 @@ public class TextQuestionController : IQuestionReadable
   }
   private void InvokeEvent()
   {
-    sentenceUIViewer.RemoveSentenceEndListener(OnSentenceEnd);
+    sentence.RemoveSentenceEndListener(OnSentenceEnd);
     askText.RemoveYesButtonListener(OnYesClicked);
     askText.RemoveNoButtonListener(OnNoClicked);
     yesNoController.InvokeEvent();

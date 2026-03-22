@@ -13,9 +13,9 @@ public class YesNoController
   public string CurrentNo => currentYesNo.NoText == "" ? "NO" : currentYesNo.NoText;
   public AskText askText;
   public AskingEvent currentEvent;
-  private SentenceSequenceViewer sentenceUIViewer;
+  private Sentence sentenceUIViewer;
   private IYesNoState stateController;
-  public YesNoController(IYesNO yesNO, IYesNoState stateController, AskText askText, SentenceSequenceViewer sentenceUIViewer)
+  public YesNoController(IYesNO yesNO, IYesNoState stateController, AskText askText, Sentence sentenceUIViewer)
   {
     currentYesNo = yesNO;
     this.stateController = stateController;
@@ -33,7 +33,7 @@ public class YesNoController
     askText.ClearAsking();
     askText.DisableAsking();
     stateController.OnReadingAnswer();
-    sentenceUIViewer.PrintText(CurrentSentence);
+    sentenceUIViewer.PrintAnswer(CurrentSentence);
   }
 
   public void OnRead()

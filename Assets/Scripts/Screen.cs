@@ -17,13 +17,11 @@ public class Screen : MonoBehaviour, IScreen
 {
     // 제공
     private QuestionLoop loop;
-    [SerializeField] TextSequence sentenceSeq;
-
     [SerializeField] Sentence sentence;
     [SerializeField] AskText ask;
-    [SerializeField] Morse morse;
     [SerializeField] QuestionList questionList;
     [SerializeField] Button nextButton;
+    [SerializeField] ScreenEffectData effectData;
 
     // 사용
     [SerializeField] GameObject screenOffPanel;
@@ -35,17 +33,18 @@ public class Screen : MonoBehaviour, IScreen
 
     void Awake()
     {
+        sentence.effectData = effectData;
+        ask.effectData = effectData;
         loop = new QuestionLoop(
             questionList,
             this,
-            new SentenceSequenceViewer(sentenceSeq),
+            sentence,
             ask,
-            morse);
+            effectData);
         Off();
         onScreenOn.AddListener(ReadQustionListener);
         AskingEventRegistry.redScreen = redScreen;
     }
-
     public void SetCursorVariables(float Depth)
     {
         cursor.SetValues((RectTransform)transform, Depth);

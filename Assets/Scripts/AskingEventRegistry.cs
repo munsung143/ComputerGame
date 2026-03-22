@@ -85,5 +85,9 @@ public enum AskingEvent
   Reverse,
   GoldenBall,
   Binary,
-  HalfReset
+  HalfReset,
+  RedCursor,
+  BlurCursor,
+  FlipScreen,
+  ReverseCursor
 }

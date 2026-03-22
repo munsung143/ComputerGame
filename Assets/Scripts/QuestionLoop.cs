@@ -23,18 +23,16 @@ public enum QuestionState
 }
 public class QuestionLoop : IQuestionLoopEffectProvider
 {
-  private SentenceSequenceViewer sentenceUIViewer;
+  private Sentence sentence;
   private AskText askText;
-  private Morse morse;
   private QuestionList questionList;
   private int currentQuestionIndex;
   private Question[] questions;
   public Question currentQuestion;
-  private QuestionState state;
   private bool reversed;
   public bool NoMoreQuestion => currentQuestionIndex >= questionList.clearQuestionCount;
-
   private IScreen screen;
+  private ScreenEffectData effectData;
 
   public TextQuestion CurrentTextQuestion
   {
@@ -57,16 +55,16 @@ public class QuestionLoop : IQuestionLoopEffectProvider
   public QuestionLoop(
     QuestionList questionList,
     IScreen screen,
-    SentenceSequenceViewer sentenceUIViewer,
+    Sentence sentenceUIViewer,
     AskText askText,
-    Morse morse)
+    ScreenEffectData effectData)
   {
     AskingEventRegistry.questionLoop = this;
     this.questionList = questionList;
     this.screen = screen;
-    this.sentenceUIViewer = sentenceUIViewer;
+    this.sentence = sentenceUIViewer;
     this.askText = askText;
-    this.morse = morse;
+    this.effectData = effectData;
     SetNewQuestionArray();
     currentQuestion = questions[currentQuestionIndex];
   }
@@ -78,7 +76,7 @@ public class QuestionLoop : IQuestionLoopEffectProvider
     {
       SetNewQuestionArray();
       reversed = false;
-      sentenceUIViewer.ResetSubject();
+      effectData.ResetSubject();
     }
     if (reversed) currentQuestionIndex--;
     else currentQuestionIndex++;
@@ -92,10 +90,9 @@ public class QuestionLoop : IQuestionLoopEffectProvider
   {
     if (CurrentTextQuestion != null)
     {
-      state = QuestionState.TextQuestion;
       questionReadable = new TextQuestionController(
         askText,
-        sentenceUIViewer,
+        sentence,
         CurrentTextQuestion,
         currentQuestionIndex);
       questionReadable.ReadQuestion();
@@ -103,9 +100,8 @@ public class QuestionLoop : IQuestionLoopEffectProvider
     else if (CurrentMorseQuestion != null)
     {
       questionReadable = new MorseQuestionController(
-        morse,
         CurrentMorseQuestion,
-        sentenceUIViewer,
+        sentence,
         askText);
       questionReadable.ReadQuestion();
     }
@@ -157,7 +153,7 @@ public class QuestionLoop : IQuestionLoopEffectProvider
 
   private void GameEnd()
   {
-    sentenceUIViewer.PrintText("게임 끝");
+    sentence.PrintAnswer("게임 끝");
   }
 
 

@@ -6,25 +6,18 @@ public class SentenceController
   public string CurrentSentence => sentences[currentSentenceIndex];
   public bool IsLastSentence => currentSentenceIndex == sentences.Length - 1;
   private ISentenceState stateController;
-  private SentenceSequenceViewer sentenceUIViewer;
+  private Sentence sentence;
 
-  public SentenceController(ISentencePrintable sentencePrintable, ISentenceState stateController, SentenceSequenceViewer sentenceUIViewer)
+  public SentenceController(ISentencePrintable sentencePrintable, ISentenceState stateController, Sentence sentence)
   {
     currentSentencePrintable = sentencePrintable;
     this.stateController = stateController;
-    this.sentenceUIViewer = sentenceUIViewer;
+    this.sentence = sentence;
   }
   public void ReadSentence(int index)
   {
     stateController.OnReadingSentence();
-    if (currentSentenceIndex == 0)
-    {
-      sentenceUIViewer.PrintTextWithIndex(CurrentSentence, index);
-    }
-    else
-    {
-      sentenceUIViewer.PrintTextWithInitialIndex(CurrentSentence, index);
-    }
+    sentence.PrintSentence(CurrentSentence, index, currentSentenceIndex == 0);
   }
   public void OnRead()
   {
