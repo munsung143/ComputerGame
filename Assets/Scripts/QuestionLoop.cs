@@ -76,7 +76,7 @@ public class QuestionLoop : IQuestionLoopEffectProvider
     {
       SetNewQuestionArray();
       reversed = false;
-      effectData.ResetSubject();
+      effectData.Reset();
     }
     if (reversed) currentQuestionIndex--;
     else currentQuestionIndex++;

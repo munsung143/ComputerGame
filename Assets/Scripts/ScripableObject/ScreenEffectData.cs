@@ -3,7 +3,16 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 
-public class ScreenEffectData : ScriptableObject
+public interface IScreenEffectProvider
+{
+  public void SetSubject(string subject, string postpositions);
+  public void SetBinaryState(bool b);
+  public void SetFontMult(float size);
+  public void SetTextDelayMult(float delay);
+  public void Reset();
+}
+[CreateAssetMenu(fileName = "ScreenEffect", menuName = "ScriptableObjects/ScreenEffect", order = 1)]
+public class ScreenEffectData : ScriptableObject, IScreenEffectProvider
 {
   public string subject;
   public string postpositions;
@@ -16,6 +25,7 @@ public class ScreenEffectData : ScriptableObject
   void OnEnable()
   {
     Reset();
+    AskingEventRegistry.screenEffect = this;
   }
   public void Reset()
   {
@@ -23,21 +33,25 @@ public class ScreenEffectData : ScriptableObject
     postpositions = "";
     isBinary = false;
     textSpeedMult = 1;
-    fontSizeMult = 1;
+    SetFontMult(1);
   }
   public void SetSubject(string subject, string postpositions)
   {
     this.subject = subject;
     this.postpositions = postpositions;
   }
-  public void SetFontMult(float m)
+  public void SetFontMult(float value)
   {
-    this.fontSizeMult = m;
+    this.fontSizeMult = value;
     onFontMultSet?.Invoke(fontSizeMult);
   }
   public void SetBinaryState(bool b)
   {
     isBinary = b;
+  }
+  public void SetTextDelayMult(float value)
+  {
+    textSpeedMult = value;
   }
   public string GetFormattedText(string text)
   {

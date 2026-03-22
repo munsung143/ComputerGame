@@ -9,19 +9,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering.LookDev;
 using UnityEngine.UI;
-
-
-public interface ITextEffectPrivider
-{
-  public void SetGoldenBallSubject();
-  public void ResetSubject();
-  public void SetBinaryState();
-  public void ResetBinaryState();
-  public void SetFontSize(float size);
-  public void SetTextDelay(float delay);
-  public void ResetFontSize();
-  public void ResetTextDelay();
-}
 public class SentenceSequenceViewer
 {
   private TextSequence sequence;

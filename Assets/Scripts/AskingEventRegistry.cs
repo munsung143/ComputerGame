@@ -7,9 +7,7 @@ public static class AskingEventRegistry
   public static IRedScreenEffectProvider redScreen;
   public static IMonitorEffectProvider monitor;
   public static IQuestionLoopEffectProvider questionLoop;
-  public static ITextEffectPrivider sentenceUiViewer;
-
-  public static ITextEffectPrivider askText;
+  public static IScreenEffectProvider screenEffect;
 
 
   public static void PlayEvent(AskingEvent type)
@@ -30,14 +28,7 @@ public static class AskingEventRegistry
 
   private static void Reset()
   {
-    sentenceUiViewer.ResetBinaryState();
-    askText.ResetBinaryState();
-    askText.ResetSubject();
-    askText.ResetFontSize();
-    askText.ResetBinaryState();
-    sentenceUiViewer.ResetSubject();
-    sentenceUiViewer.ResetFontSize();
-    sentenceUiViewer.ResetTextDelay();
+    screenEffect.Reset();
     questionLoop.Reset();
   }
 
@@ -48,17 +39,14 @@ public static class AskingEventRegistry
   }
   private static void GoldenBallEvent()
   {
-    sentenceUiViewer.SetGoldenBallSubject();
-    askText.SetGoldenBallSubject();
+    screenEffect.SetSubject("금구슬", "은이을과");
     questionLoop.Next();
   }
   private static void Binary()
   {
-    sentenceUiViewer.SetBinaryState();
-    askText.SetBinaryState();
-    sentenceUiViewer.SetFontSize(0.7f);
-    askText.SetFontSize(1);
-    sentenceUiViewer.SetTextDelay(0.01f);
+    screenEffect.SetBinaryState(true);
+    screenEffect.SetTextDelayMult(0.1f);
+    screenEffect.SetFontMult(0.5f);
     questionLoop.Next();
   }
   private static void HalfReset()
