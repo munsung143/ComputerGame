@@ -1,7 +1,17 @@
 using UnityEngine;
+using UnityEngine.UI;
 
-public class CursorController : MonoBehaviour
+public interface ICursorEffectProvider
 {
+    public void SetColor(Color color);
+    public void Reverse(bool val);
+    public void Reset();
+
+}
+
+public class CursorController : MonoBehaviour, ICursorEffectProvider
+{
+    [SerializeField] RawImage image;
     RectTransform screen;
     Camera cam;
     float cameraDepth;
@@ -13,6 +23,7 @@ public class CursorController : MonoBehaviour
     void Awake()
     {
         cam = Camera.main;
+        AskingEventRegistry.cursor = this;
     }
     void Update()
     {
@@ -44,5 +55,19 @@ public class CursorController : MonoBehaviour
     public void GetScreenState(bool isOn)
     {
         this.screenOn = isOn;
+    }
+
+    public void SetColor(Color color)
+    {
+        image.color = color;
+    }
+    public void Reverse(bool val)
+    {
+        reverse = val;
+    }
+    public void Reset()
+    {
+        reverse =  false;
+        image.color = Color.white;
     }
 }

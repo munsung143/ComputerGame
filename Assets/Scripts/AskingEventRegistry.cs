@@ -7,7 +7,9 @@ public static class AskingEventRegistry
   public static IRedScreenEffectProvider redScreen;
   public static IMonitorEffectProvider monitor;
   public static IQuestionLoopEffectProvider questionLoop;
-  public static IScreenEffectProvider screenEffect;
+  public static IScreenTextEffectProvider screenText;
+  public static IScreenEffectProvider screen;
+  public static ICursorEffectProvider cursor;
 
 
   public static void PlayEvent(AskingEvent type)
@@ -23,12 +25,20 @@ public static class AskingEventRegistry
       case AskingEvent.GoldenBall: GoldenBallEvent(); break;
       case AskingEvent.Binary: Binary(); break;
       case AskingEvent.HalfReset: HalfReset(); break;
+      case AskingEvent.FlipScreen: FlipScreen(); break;
+      case AskingEvent.CursorRed : SetCursorRed(); break;
+      case AskingEvent.CursorBlue : SetCursorBlue(); break;
+      case AskingEvent.TextDelay3x: TextDelay3x(); break;
+      case AskingEvent.ReverseCursor: ReverseCursor(); break;
+      case AskingEvent.Cake: questionLoop.Next(); break;
     }
   }
 
   private static void Reset()
   {
-    screenEffect.Reset();
+    screenText.Reset();
+    screen.Rotation(0);
+    cursor.Reset();
     questionLoop.Reset();
   }
 
@@ -39,14 +49,14 @@ public static class AskingEventRegistry
   }
   private static void GoldenBallEvent()
   {
-    screenEffect.SetSubject("금구슬", "은이을과");
+    screenText.SetSubject("금구슬", "은이을과");
     questionLoop.Next();
   }
   private static void Binary()
   {
-    screenEffect.SetBinaryState(true);
-    screenEffect.SetTextDelayMult(0.1f);
-    screenEffect.SetFontMult(0.5f);
+    screenText.SetBinaryState(true);
+    screenText.SetTextDelayMult(0.1f);
+    screenText.SetFontMult(0.5f);
     questionLoop.Next();
   }
   private static void HalfReset()
@@ -61,6 +71,31 @@ public static class AskingEventRegistry
       questionLoop.Next();
     }
   }
+  private static void ReverseCursor()
+  {
+    cursor.Reverse(true);
+    questionLoop.Next();
+  }
+  private static void FlipScreen()
+  {
+    screen.Rotation(180);
+    questionLoop.Next();
+  }
+  private static void SetCursorRed()
+  {
+    cursor.SetColor(Color.red);
+    questionLoop.Next();
+  }
+  private static void SetCursorBlue()
+  {
+    cursor.SetColor(Color.blue);
+    questionLoop.Next();
+  }
+  private static void TextDelay3x()
+  {
+    screenText.SetTextDelayMult(3);
+    questionLoop.Next();
+  }
 }
 
 public enum AskingEvent
@@ -74,8 +109,10 @@ public enum AskingEvent
   GoldenBall,
   Binary,
   HalfReset,
-  RedCursor,
-  BlurCursor,
+  CursorRed,
+  CursorBlue,
   FlipScreen,
-  ReverseCursor
+  ReverseCursor,
+  TextDelay3x,
+  Cake
 }

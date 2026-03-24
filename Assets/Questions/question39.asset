@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9aa56716c26269f40af74758cd641e7c, type: 3}
-  m_Name: question20
+  m_Name: question39
   m_EditorClassIdentifier: 
   code: 
-  requiredQuestionCount: 4
+  requiredQuestionCount: -1
   followingQuestionCode: 
   fixedIndex: -1
   fixChance: 1
-  isTrap: 1
+  isTrap: 0
   yestText: 
-  noText: 
+  noText: YES
   yesEvent: 0
-  noEvent: 3
+  noEvent: 0
   yesMessage: []
   noMessage: []
   sentence:
-  - "4\uBC88\uC9F8 #\uC9C8\uBB38#\uC744 \uAE30\uC5B5\uD558\uC2ED\uB2C8\uAE4C?"
+  - "#19\uAE08# \uC601\uC0C1\uC744 \uC990\uACA8\uBCF4\uC2ED\uB2C8\uAE4C?"

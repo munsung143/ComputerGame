@@ -307,7 +307,7 @@ MonoBehaviour:
   sepTmp: {fileID: 1272793833}
   noTmp: {fileID: 1266249373}
   widthTester: {fileID: 1543373159}
-  effectData: {fileID: 0}
+  effectData: {fileID: 11400000, guid: d53313979d2d66749bf7cc0925b25efe, type: 2}
 --- !u!1 &274181945
 GameObject:
   m_ObjectHideFlags: 0
@@ -1387,7 +1387,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tmpText: {fileID: 650315122}
-  effectData: {fileID: 0}
+  effectData: {fileID: 11400000, guid: d53313979d2d66749bf7cc0925b25efe, type: 2}
 --- !u!1 &780646293
 GameObject:
   m_ObjectHideFlags: 0
@@ -3063,6 +3063,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e8e4c9b7a409d442812da6e94d359d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  image: {fileID: 780646295}
 --- !u!222 &2070321935
 CanvasRenderer:
   m_ObjectHideFlags: 0

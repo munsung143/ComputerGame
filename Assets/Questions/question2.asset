@@ -20,8 +20,8 @@ MonoBehaviour:
   isTrap: 0
   yestText: "#\uBE68\uAC04\uC0C9#"
   noText: "#\uD30C\uB780\uC0C9#"
-  yesEvent: 0
-  noEvent: 0
+  yesEvent: 9
+  noEvent: 10
   yesMessage: []
   noMessage: []
   sentence:

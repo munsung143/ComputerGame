@@ -6,10 +6,10 @@ public class Sentence : MonoBehaviour
 {
   [SerializeField] TMP_Text tmpText;
   private Morse morse;
-  private TextSequence textSequence;
+  private TextSeq textSequence;
   private TextEditor textEditor;
   private Coroutine currentRoutine;
-  public ScreenEffectData effectData;
+  public ScreenTextEffectData effectData;
 
   private float textDelay = 0.03f;
   private float underbarDelay = 0.3f;
@@ -18,7 +18,7 @@ public class Sentence : MonoBehaviour
   public void Awake()
   {
     textEditor = new TextEditor(tmpText);
-    textSequence = new TextSequence(tmpText);
+    textSequence = new TextSeq(tmpText);
     morse = new Morse(textEditor);
     initialFontSize = tmpText.fontSize;
   }

@@ -12,8 +12,12 @@ public interface IScreen
     public void AddNextButtonListener(UnityAction action);
     public void RemoveNextButtonListener(UnityAction action);
 }
+public interface IScreenEffectProvider
+{
+    public void Rotation(float value);
+}
 
-public class Screen : MonoBehaviour, IScreen
+public class Screen : MonoBehaviour, IScreen, IScreenEffectProvider
 {
     // 제공
     private QuestionLoop loop;
@@ -21,7 +25,7 @@ public class Screen : MonoBehaviour, IScreen
     [SerializeField] AskText ask;
     [SerializeField] QuestionList questionList;
     [SerializeField] Button nextButton;
-    [SerializeField] ScreenEffectData effectData;
+    [SerializeField] ScreenTextEffectData effectData;
 
     // 사용
     [SerializeField] GameObject screenOffPanel;
@@ -33,8 +37,6 @@ public class Screen : MonoBehaviour, IScreen
 
     void Awake()
     {
-        sentence.effectData = effectData;
-        ask.effectData = effectData;
         loop = new QuestionLoop(
             questionList,
             this,
@@ -44,6 +46,7 @@ public class Screen : MonoBehaviour, IScreen
         Off();
         onScreenOn.AddListener(ReadQustionListener);
         AskingEventRegistry.redScreen = redScreen;
+        AskingEventRegistry.screen = this;
     }
     public void SetCursorVariables(float Depth)
     {
@@ -82,5 +85,9 @@ public class Screen : MonoBehaviour, IScreen
     public void RemoveNextButtonListener(UnityAction action)
     {
         nextButton.onClick.RemoveListener(action);
+    }
+    public void Rotation(float value)
+    {
+        transform.rotation = Quaternion.Euler(new Vector3(0,0,value));
     }
 }

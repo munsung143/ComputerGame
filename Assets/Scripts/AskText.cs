@@ -18,11 +18,11 @@ public class AskText : MonoBehaviour
     [SerializeField] TMP_Text noTmp;
     [SerializeField] TMP_Text widthTester;
 
-    private TextSequence yesSeq;
-    private TextSequence sepSeq;
-    private TextSequence noSeq;
+    private TextSeq yesSeq;
+    private TextSeq sepSeq;
+    private TextSeq noSeq;
 
-    public ScreenEffectData effectData;
+    public ScreenTextEffectData effectData;
 
     private string yes;
     private string no;
@@ -31,9 +31,9 @@ public class AskText : MonoBehaviour
 
     void Awake()
     {
-        yesSeq = new TextSequence(yesTmp);
-        sepSeq = new TextSequence(sepTmp);
-        noSeq = new TextSequence(noTmp);
+        yesSeq = new TextSeq(yesTmp);
+        sepSeq = new TextSeq(sepTmp);
+        noSeq = new TextSeq(noTmp);
         initialFontSize = yesTmp.fontSize;
     }
     void Start()

@@ -32,7 +32,7 @@ public class QuestionLoop : IQuestionLoopEffectProvider
   private bool reversed;
   public bool NoMoreQuestion => currentQuestionIndex >= questionList.clearQuestionCount;
   private IScreen screen;
-  private ScreenEffectData effectData;
+  private ScreenTextEffectData effectData;
 
   public TextQuestion CurrentTextQuestion
   {
@@ -57,7 +57,7 @@ public class QuestionLoop : IQuestionLoopEffectProvider
     IScreen screen,
     Sentence sentenceUIViewer,
     AskText askText,
-    ScreenEffectData effectData)
+    ScreenTextEffectData effectData)
   {
     AskingEventRegistry.questionLoop = this;
     this.questionList = questionList;

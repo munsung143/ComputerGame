@@ -11,12 +11,12 @@ using UnityEngine.Rendering.LookDev;
 using UnityEngine.UI;
 public class SentenceSequenceViewer
 {
-  private TextSequence sequence;
+  private TextSeq sequence;
   private WaitForSeconds initialTextDelay;
   private WaitForSeconds initialUnderbarDelay;
   private WaitForSeconds currentTextDelay;
 
-  public SentenceSequenceViewer(TextSequence sequence)
+  public SentenceSequenceViewer(TextSeq sequence)
   {
     this.sequence = sequence;
     initialTextDelay = new WaitForSeconds(0.03f);

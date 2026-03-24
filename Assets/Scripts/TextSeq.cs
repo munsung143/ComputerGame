@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class TextSequence
+public class TextSeq
 {
 
     private static int COMPOSITE_KOREAN_START_AT = 0xAC00;
@@ -14,7 +14,7 @@ public class TextSequence
     private static int[] SINGLE_KOREAN_TABLE = { 1, 2, 4, 7, 8, 9, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
     private UnityEvent onTextEnd;
     private TMP_Text tmp;
-    public TextSequence(TMP_Text tmp)
+    public TextSeq(TMP_Text tmp)
     {
         onTextEnd = new UnityEvent();
         this.tmp = tmp;

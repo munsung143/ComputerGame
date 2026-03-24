@@ -3,7 +3,7 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 
-public interface IScreenEffectProvider
+public interface IScreenTextEffectProvider
 {
   public void SetSubject(string subject, string postpositions);
   public void SetBinaryState(bool b);
@@ -12,7 +12,7 @@ public interface IScreenEffectProvider
   public void Reset();
 }
 [CreateAssetMenu(fileName = "ScreenEffect", menuName = "ScriptableObjects/ScreenEffect", order = 1)]
-public class ScreenEffectData : ScriptableObject, IScreenEffectProvider
+public class ScreenTextEffectData : ScriptableObject, IScreenTextEffectProvider
 {
   public string subject;
   public string postpositions;
@@ -20,12 +20,12 @@ public class ScreenEffectData : ScriptableObject, IScreenEffectProvider
   public float textSpeedMult;
   public float fontSizeMult;
 
-  public Action<float> onFontMultSet;
+ [NonSerialized] public Action<float> onFontMultSet;
 
   void OnEnable()
   {
     Reset();
-    AskingEventRegistry.screenEffect = this;
+    AskingEventRegistry.screenText = this;
   }
   public void Reset()
   {
