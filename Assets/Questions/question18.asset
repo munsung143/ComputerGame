@@ -17,12 +17,13 @@ MonoBehaviour:
   followingQuestionCode: 
   fixedIndex: -1
   fixChance: 1
-  isTrap: 0
+  isTrap: 1
   yestText: 
   noText: 
   yesEvent: 0
-  noEvent: 0
+  noEvent: 6
   yesMessage: []
-  noMessage: []
+  noMessage:
+  - "\uC774 \uB2E4\uC74C\uBD80\uD130 \uD2B9\uC815 \uB2E8\uC5B4\uAC00 \uAD50\uCCB4\uB428"
   sentence:
-  - "#\uD658\uACBD\uC124\uC815#\uC774 \uC5C6\uC5B4\uC11C \uBD88\uD3B8\uD558\uC2ED\uB2C8\uAE4C?"
+  - "NO #\uB2E8\uC5B4\uB97C# \uAD50\uCCB4\uD568"

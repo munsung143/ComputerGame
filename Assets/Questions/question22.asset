@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aa56716c26269f40af74758cd641e7c, type: 3}
   m_Name: question22
   m_EditorClassIdentifier: 
-  code: e1
+  code: 
   requiredQuestionCount: -1
-  followingQuestionCode: e2
+  followingQuestionCode: 
   fixedIndex: -1
   fixChance: 1
-  isTrap: 1
+  isTrap: 0
   yestText: 
-  noText: 
-  yesEvent: 3
-  noEvent: 2
+  noText: YES
+  yesEvent: 12
+  noEvent: 0
   yesMessage: []
   noMessage: []
   sentence:
-  - "ERROR \uCC98\uC74C\uBD80\uD130 \uB2E4\uC2DC \uC9C4\uD589\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
+  - "YES #\uB204\uB97C# \uC2DC \uB9C8\uC6B0\uC2A4 \uBC18\uC804"

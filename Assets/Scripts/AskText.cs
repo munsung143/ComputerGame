@@ -43,7 +43,7 @@ public class AskText : MonoBehaviour
         yesSeq.AddTextEndListner(() => StartCoroutine(sepSeq.TextRoutine("/", WaitForSecondsPool.Get(effectData.textSpeedMult * textDelay))));
         sepSeq.AddTextEndListner(() => StartCoroutine(noSeq.TextRoutine(this.no, WaitForSecondsPool.Get(effectData.textSpeedMult * textDelay))));
         noSeq.AddTextEndListner(EnableAsking);
-        effectData.onFontMultSet += SetFontSize;
+        //effectData.onFontMultSet += SetFontSize;
     }
     public void EnableAsking()
     {
@@ -61,16 +61,17 @@ public class AskText : MonoBehaviour
         sepTmp.text = "";
         noTmp.text = "";
     }
-    public void SetFontSize(float mult)
+    public void SetFontSize()
     {
-        yesTmp.fontSize = mult * initialFontSize;
-        sepTmp.fontSize = mult * initialFontSize;
-        noTmp.fontSize = mult * initialFontSize;
-        widthTester.fontSize = mult * initialFontSize;
+        yesTmp.fontSize = effectData.fontSizeMult * initialFontSize;
+        sepTmp.fontSize = effectData.fontSizeMult * initialFontSize;
+        noTmp.fontSize = effectData.fontSizeMult * initialFontSize;
+        widthTester.fontSize = effectData.fontSizeMult * initialFontSize;
     }
 
     public void ReadAsking(string yes, string no)
     {
+        SetFontSize();
         yes = effectData.GetFormattedText(yes);
         no = effectData.GetFormattedText(no);
         this.yes = yes;

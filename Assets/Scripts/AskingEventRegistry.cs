@@ -49,13 +49,14 @@ public static class AskingEventRegistry
   }
   private static void GoldenBallEvent()
   {
-    screenText.SetSubject("금구슬", "은이을과");
+    //screenText.SetSubject("금구슬", "은이을과");
+    screenText.SetSubject("당근", "은이을과");
     questionLoop.Next();
   }
   private static void Binary()
   {
     screenText.SetBinaryState(true);
-    screenText.SetTextDelayMult(0.1f);
+    screenText.MultTextDelayConst(0.1f);
     screenText.SetFontMult(0.5f);
     questionLoop.Next();
   }
@@ -93,7 +94,7 @@ public static class AskingEventRegistry
   }
   private static void TextDelay3x()
   {
-    screenText.SetTextDelayMult(3);
+    screenText.MultTextDelayConst(3);
     questionLoop.Next();
   }
 }

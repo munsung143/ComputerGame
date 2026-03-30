@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: question17
   m_EditorClassIdentifier: 
   code: 
-  requiredQuestionCount: -1
+  requiredQuestionCount: 2
   followingQuestionCode: 
   fixedIndex: -1
   fixChance: 1
-  isTrap: 0
+  isTrap: 1
   yestText: 
   noText: 
-  yesEvent: 0
+  yesEvent: 5
   noEvent: 0
-  yesMessage:
-  - "\uC6B0\uC218\uD55C DNA\uB97C \uAC00\uC9C0\uC168\uAD70\uC694"
+  yesMessage: []
   noMessage:
-  - "\uC2E4\uB9DD\uC785\uB2C8\uB2E4"
+  - "\uC9C8\uBB38\uC744 \uC5ED\uD589\uD558\uACE0"
+  - "\uCCAB\uC9C8\uBB38 \uB3C4\uB2EC \uC2DC \uC154\uD50C"
   sentence:
-  - "\uD558\uC640\uC774\uC548 #\uD53C\uC790#\uB97C \uC88B\uC544\uD558\uC2ED\uB2C8\uAE4C?"
+  - "YES #\uC9C8\uBB38# \uC5ED\uD589"

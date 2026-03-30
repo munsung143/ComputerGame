@@ -8,7 +8,7 @@ public interface IScreenTextEffectProvider
   public void SetSubject(string subject, string postpositions);
   public void SetBinaryState(bool b);
   public void SetFontMult(float size);
-  public void SetTextDelayMult(float delay);
+  public void MultTextDelayConst(float delay);
   public void Reset();
 }
 [CreateAssetMenu(fileName = "ScreenEffect", menuName = "ScriptableObjects/ScreenEffect", order = 1)]
@@ -20,7 +20,7 @@ public class ScreenTextEffectData : ScriptableObject, IScreenTextEffectProvider
   public float textSpeedMult;
   public float fontSizeMult;
 
- [NonSerialized] public Action<float> onFontMultSet;
+ //[NonSerialized] public Action<float> onFontMultSet;
 
   void OnEnable()
   {
@@ -43,15 +43,15 @@ public class ScreenTextEffectData : ScriptableObject, IScreenTextEffectProvider
   public void SetFontMult(float value)
   {
     this.fontSizeMult = value;
-    onFontMultSet?.Invoke(fontSizeMult);
+    //onFontMultSet?.Invoke(fontSizeMult);
   }
   public void SetBinaryState(bool b)
   {
     isBinary = b;
   }
-  public void SetTextDelayMult(float value)
+  public void MultTextDelayConst(float value)
   {
-    textSpeedMult = value;
+    textSpeedMult *= value;
   }
   public string GetFormattedText(string text)
   {

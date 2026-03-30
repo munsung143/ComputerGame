@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   code: 
   requiredQuestionCount: -1
-  followingQuestionCode: e1
+  followingQuestionCode: 
   fixedIndex: -1
   fixChance: 1
   isTrap: 1
   yestText: 
   noText: 
-  yesEvent: 3
-  noEvent: 2
+  yesEvent: 11
+  noEvent: 0
   yesMessage: []
   noMessage: []
   sentence:
-  - "ERROR \uCC98\uC74C\uBD80\uD130 \uB2E4\uC2DC \uC9C4\uD589\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
+  - "YES\uB97C \uB204\uB974\uBA74 #\uD654\uBA74# \uBC18\uC804"

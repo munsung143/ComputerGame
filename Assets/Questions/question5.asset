@@ -18,11 +18,15 @@ MonoBehaviour:
   fixedIndex: -1
   fixChance: 1
   isTrap: 0
-  yestText: NO
+  yestText: 
   noText: 
   yesEvent: 0
   noEvent: 0
-  yesMessage: []
-  noMessage: []
+  yesMessage:
+  - "\uB2F5\uBCC01"
+  - "\uB2F5\uBCC02"
+  noMessage:
+  - "\uB2F5\uBCC01"
+  - "\uB2F5\uBCC02"
   sentence:
-  - "\uC0AC\uB791\uD558\uB294 #\uC0AC\uB78C#\uC774 \uC788\uC73C\uC2ED\uB2C8\uAE4C?"
+  - "#\uC758\uBBF8# \uC5C6\uB294 \uC9C8\uBB38 \uB2F5\uBCC0\uC788\uC74C"

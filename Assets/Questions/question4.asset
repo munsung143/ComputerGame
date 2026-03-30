@@ -22,7 +22,11 @@ MonoBehaviour:
   noText: 
   yesEvent: 0
   noEvent: 0
-  yesMessage: []
-  noMessage: []
+  yesMessage:
+  - "\uB2F5\uBCC01"
+  - "\uB2F5\uBCC02"
+  noMessage:
+  - "\uB2F5\uBCC01"
+  - "\uB2F5\uBCC02"
   sentence:
-  - "#\uC88B\uB0D0#?"
+  - "#\uC758\uBBF8# \uC5C6\uB294 \uC9C8\uBB38"

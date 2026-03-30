@@ -20,9 +20,11 @@ MonoBehaviour:
   isTrap: 1
   yestText: 
   noText: 
-  yesEvent: 0
-  noEvent: 3
+  yesEvent: 7
+  noEvent: 0
   yesMessage: []
-  noMessage: []
+  noMessage:
+  - "\uC774 \uB2E4\uC74C\uBD80\uD130 \uBAA8\uB4E0 \uAE00\uC774 \uC774\uC9C4\uC218\uB85C
+    \uCD9C\uB825\uB428"
   sentence:
-  - "\uD604\uC7AC \uC774 #\uC870\uC0AC#\uC5D0 \uB9CC\uC871 \uD558\uC2ED\uB2C8\uAE4C?"
+  - "YES #\uC774\uC9C4\uC218# \uCD9C\uB825"

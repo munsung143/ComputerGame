@@ -19,10 +19,10 @@ MonoBehaviour:
   fixChance: 1
   isTrap: 0
   yestText: 
-  noText: YES
-  yesEvent: 0
+  noText: 
+  yesEvent: 3
   noEvent: 0
   yesMessage: []
   noMessage: []
   sentence:
-  - "\uACC4\uC18D \uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
+  - "YES \uB9AC\uC14B no \uB2E4\uC74C"

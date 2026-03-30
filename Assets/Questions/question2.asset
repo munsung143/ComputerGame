@@ -22,8 +22,12 @@ MonoBehaviour:
   noText: "#\uD30C\uB780\uC0C9#"
   yesEvent: 9
   noEvent: 10
-  yesMessage: []
-  noMessage: []
+  yesMessage:
+  - "\uCEE4\uC11C\uB97C \uBE68\uAC04\uC0C9\uC73C\uB85C \uBC14\uAFC8"
+  - "\uC774 \uB2E4\uC74C\uBD80\uD130"
+  noMessage:
+  - "\uCEE4\uC11C\uB97C \uD30C\uB780\uC0C9\uC73C\uB85C \uBC14\uAFC8"
+  - "\uC774 \uB2E4\uC74C\uBD80\uD130"
   sentence:
-  - "#\uBE68\uAC04\uC0C9#\uC744 \uC88B\uC544\uD558\uC2ED\uB2C8\uAE4C?#\uD30C\uB780\uC0C9#\uC744
-    \uC88B\uC544\uD558\uC2ED\uB2C8\uAE4C?"
+  - "yes #\uBE68\uAC04\uC0C9#"
+  - "no #\uD30C\uB780\uC0C9#"

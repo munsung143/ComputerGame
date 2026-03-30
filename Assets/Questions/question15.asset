@@ -12,19 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aa56716c26269f40af74758cd641e7c, type: 3}
   m_Name: question15
   m_EditorClassIdentifier: 
-  code: 
+  code: e4
   requiredQuestionCount: -1
-  followingQuestionCode: 
+  followingQuestionCode: e5
   fixedIndex: -1
   fixChance: 1
-  isTrap: 0
+  isTrap: 1
   yestText: 
   noText: 
-  yesEvent: 0
-  noEvent: 0
+  yesEvent: 3
+  noEvent: 2
   yesMessage: []
   noMessage: []
   sentence:
-  - "\uC774 \uC9C8\uBB38\uC5D0 #YES#\uB97C \uC120\uD0DD\uD558\uC9C0 \uC54A\uB294
-    \uAC83\uC774 #NO#\uB97C \uC120\uD0DD\uD558\uB294 \uAC83\uACFC \uAC19\uC9C0 \uC54A\uB2E4\uACE0
-    \uC0DD\uAC01\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uAE4C?"
+  - "No \uD6C4\uC18D\uC9C8\uBB38 \uCD9C\uB825\uB4284 Yes\uB9AC\uC14B"

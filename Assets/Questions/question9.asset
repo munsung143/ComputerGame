@@ -17,12 +17,12 @@ MonoBehaviour:
   followingQuestionCode: 
   fixedIndex: -1
   fixChance: 1
-  isTrap: 0
+  isTrap: 1
   yestText: 
   noText: 
   yesEvent: 0
-  noEvent: 0
+  noEvent: 3
   yesMessage: []
   noMessage: []
   sentence:
-  - "\uC774 \uC9C8\uBB38\uC774 #\uD568\uC815#\uC774\uB77C\uACE0 \uC0DD\uAC01 \uD558\uC2ED\uB2C8\uAE4C?"
+  - "YES #\uB9AC\uC14B# no \uB2E4\uC74C"

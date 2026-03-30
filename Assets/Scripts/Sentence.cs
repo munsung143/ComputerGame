@@ -24,7 +24,7 @@ public class Sentence : MonoBehaviour
   }
   void Start()
   {
-    effectData.onFontMultSet += SetFontSize;
+    //effectData.onFontMultSet += SetFontSize;
   }
 
   public void AddSentenceEndListener(UnityAction action)
@@ -35,9 +35,9 @@ public class Sentence : MonoBehaviour
   {
     textSequence.RemoveTextEndListener(action);
   }
-  public void SetFontSize(float mult)
+  public void SetFontSize()
   {
-    tmpText.fontSize = mult * initialFontSize;
+    tmpText.fontSize = effectData.fontSizeMult * initialFontSize;
   }
 
   public void PrintAnswer(string text)
@@ -65,6 +65,7 @@ public class Sentence : MonoBehaviour
 
   private void PrintTextRaw(string text, string initial)
   {
+    SetFontSize();
     if (currentRoutine != null) StopCoroutine(currentRoutine);
     currentRoutine = StartCoroutine(textSequence.TextRoutine(
       text,
